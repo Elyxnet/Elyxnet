@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   reactCompiler: true,
+  // Allow react-icons SVG imports
+  transpilePackages: ["react-icons"],
 };
 
 export default nextConfig;
