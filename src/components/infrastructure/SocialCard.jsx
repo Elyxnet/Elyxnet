@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { RiTwitterXLine, RiDiscordLine, RiYoutubeLine, RiTelegramLine, RiRedditLine, RiLinkedinLine } from "react-icons/ri";
-import Button from "@/components/ui/Button";
+import { RiTwitterXLine, RiDiscordLine, RiYoutubeLine, RiTelegramLine, RiRedditLine, RiLinkedinLine, RiCheckLine, RiLinkM } from "react-icons/ri";
 import Badge from "@/components/ui/Badge";
 import ProgressBar from "@/components/ui/ProgressBar";
 
@@ -12,63 +12,85 @@ const platforms = [
     name: "X / Twitter",
     icon: RiTwitterXLine,
     iconColor: "text-text-primary",
-    connected: true,
-    username: "@elyxnet_user",
-    lastSync: "2m ago",
-    score: 85,
+    placeholder: "https://x.com/yourhandle",
+    regex: /^https?:\/\/(twitter\.com|x\.com)\/\w+/i,
   },
   {
     id: "discord",
     name: "Discord",
     icon: RiDiscordLine,
     iconColor: "text-[#5865F2]",
-    connected: true,
-    username: "elyxnet#4291",
-    lastSync: "5m ago",
-    score: 72,
+    placeholder: "yourusername#0000 or discord.gg/invite",
+    regex: /^.{2,}$/,
   },
   {
     id: "telegram",
     name: "Telegram",
     icon: RiTelegramLine,
     iconColor: "text-blue-400",
-    connected: true,
-    username: "@elyx_tg",
-    lastSync: "12m ago",
-    score: 68,
+    placeholder: "https://t.me/yourhandle",
+    regex: /^https?:\/\/(t\.me|telegram\.me)\/\w+/i,
   },
   {
     id: "youtube",
     name: "YouTube",
     icon: RiYoutubeLine,
     iconColor: "text-red-400",
-    connected: true,
-    username: "Elyxnet Channel",
-    lastSync: "1h ago",
-    score: 45,
+    placeholder: "https://youtube.com/@yourchannel",
+    regex: /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/.+/i,
   },
   {
     id: "reddit",
     name: "Reddit",
     icon: RiRedditLine,
-    iconColor: "text-text-muted",
-    connected: false,
-    comingSoon: true,
+    iconColor: "text-[#FF5700]",
+    placeholder: "https://reddit.com/user/yourname",
+    regex: /^https?:\/\/(www\.)?reddit\.com\/user\/\w+/i,
   },
   {
     id: "linkedin",
     name: "LinkedIn",
     icon: RiLinkedinLine,
-    iconColor: "text-text-muted",
-    connected: false,
-    comingSoon: true,
+    iconColor: "text-[#0A66C2]",
+    placeholder: "https://linkedin.com/in/yourprofile",
+    regex: /^https?:\/\/(www\.)?linkedin\.com\/in\/.+/i,
   },
 ];
 
-export default function SocialCard({ platform, index = 0 }) {
+export default function SocialCard({ platform, index = 0, onLinked }) {
   const shouldReduce = useReducedMotion();
   const p = platform || platforms[0];
   const Icon = p.icon;
+  const [linkInput, setLinkInput] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSaveLink = async () => {
+    if (!linkInput.trim()) return;
+    
+    setSaving(true);
+    setError(null);
+    
+    try {
+      const res = await fetch("/api/platforms/link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ platform: p.id, profileUrl: linkInput.trim() }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to link");
+      }
+
+      setLinkInput("");
+      if (onLinked) onLinked();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <motion.div
@@ -94,49 +116,64 @@ export default function SocialCard({ platform, index = 0 }) {
         </div>
         {p.connected ? (
           <Badge variant="green" dot>
-            Connected
+            Linked
           </Badge>
-        ) : p.comingSoon ? (
-          <Badge variant="muted">Coming soon</Badge>
         ) : (
-          <Badge variant="muted">Not connected</Badge>
+          <Badge variant="muted">Not linked</Badge>
         )}
       </div>
 
       {p.connected && (
         <>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[12px] font-mono text-text-secondary">
-              {p.username}
+            <span className="text-[12px] font-mono text-text-secondary truncate max-w-[200px]">
+              {p.profileUrl || p.username}
             </span>
-            <span className="text-[11px] text-text-disabled">
-              Last synced: {p.lastSync}
+            <span className="text-[11px] text-text-disabled flex items-center gap-1">
+              <RiCheckLine className="w-3 h-3 text-green-400" />
+              Verified
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-text-disabled">
-              Score: {p.score}
-            </span>
-            <ProgressBar
-              value={p.score}
-              max={100}
-              color="bg-yellow-400"
-              className="flex-1"
-            />
-          </div>
+          {p.score > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-text-disabled">
+                Score: {p.score}
+              </span>
+              <ProgressBar
+                value={p.score}
+                max={100}
+                color="bg-yellow-400"
+                className="flex-1"
+              />
+            </div>
+          )}
         </>
       )}
 
-      {!p.connected && !p.comingSoon && (
-        <Button variant="ghost" className="w-full mt-2 text-[12px]">
-          Connect {p.name}
-        </Button>
-      )}
-
-      {p.comingSoon && (
-        <p className="text-[11px] text-text-disabled mt-2">
-          This platform will be available in a future update.
-        </p>
+      {!p.connected && (
+        <div className="mt-2 space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <RiLinkM className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-disabled" />
+              <input
+                type="text"
+                value={linkInput}
+                onChange={(e) => setLinkInput(e.target.value)}
+                placeholder={p.placeholder}
+                className="w-full h-9 pl-8 pr-3 rounded-lg bg-bg-base border border-border-default text-text-primary text-[12px] placeholder:text-text-disabled focus:outline-none focus:border-yellow-400 transition-colors"
+                onKeyDown={(e) => e.key === "Enter" && handleSaveLink()}
+              />
+            </div>
+            <button
+              onClick={handleSaveLink}
+              disabled={saving || !linkInput.trim()}
+              className="h-9 px-4 rounded-lg bg-yellow-400 text-bg-base text-[12px] font-semibold hover:bg-yellow-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+            >
+              {saving ? "Saving..." : "Link"}
+            </button>
+          </div>
+          {error && <p className="text-red-400 text-[11px]">{error}</p>}
+        </div>
       )}
     </motion.div>
   );

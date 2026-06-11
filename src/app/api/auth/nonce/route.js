@@ -23,3 +23,26 @@ export async function GET(req) {
     );
   }
 }
+
+export async function POST(req) {
+  try {
+    const { walletAddress } = await req.json();
+
+    if (!walletAddress) {
+      return Response.json(
+        { error: "walletAddress is required" },
+        { status: 400 }
+      );
+    }
+
+    const { nonce } = await generateNonce(walletAddress);
+
+    return Response.json({ nonce });
+  } catch (err) {
+    console.error("Nonce generation error:", err);
+    return Response.json(
+      { error: "Failed to generate nonce" },
+      { status: 500 }
+    );
+  }
+}

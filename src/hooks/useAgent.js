@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 
 /**
  * Hook for AI Agent query submission and SSE stream parsing.
+ * Supports infraMode for deep analysis (more stages, higher cost).
  */
 export function useAgent() {
   const [status, setStatus] = useState("idle"); // idle | streaming | completed | error
@@ -12,7 +13,7 @@ export function useAgent() {
   const [duration, setDuration] = useState(null);
   const [error, setError] = useState(null);
 
-  const submitQuery = useCallback(async (query) => {
+  const submitQuery = useCallback(async (query, infraMode = false) => {
     setStatus("streaming");
     setStages([]);
     setContent("");
@@ -23,11 +24,12 @@ export function useAgent() {
       const res = await fetch("/api/agent/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, infraMode }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to submit query");
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to submit query");
       }
 
       const reader = res.body.getReader();
@@ -46,15 +48,33 @@ export function useAgent() {
 
             switch (data.type) {
               case "stage":
-                setStages((prev) => [
-                  ...prev,
-                  { id: data.stage, label: data.label, state: "done" },
-                ]);
+                setStages((prev) => {
+                  // Mark previous active stages as done
+                  const updated = prev.map(s => 
+                    s.state === "active" ? { ...s, state: "done", duration: data.elapsed } : s
+                  );
+                  return [
+                    ...updated,
+                    { 
+                      id: data.stage, 
+                      label: data.label, 
+                      state: "active",
+                      detail: data.detail || null,
+                    },
+                  ];
+                });
+                break;
+              case "stage_done":
+                setStages((prev) =>
+                  prev.map(s => s.id === data.stage ? { ...s, state: "done", duration: data.elapsed } : s)
+                );
                 break;
               case "token":
                 setContent((prev) => prev + data.content);
                 break;
               case "done":
+                // Mark all remaining stages as done
+                setStages((prev) => prev.map(s => ({ ...s, state: "done" })));
                 setDuration(data.durationMs);
                 setStatus("completed");
                 break;
@@ -67,9 +87,8 @@ export function useAgent() {
         }
       }
 
-      if (status !== "error") {
-        setStatus("completed");
-      }
+      // Fallback if no "done" event received
+      setStatus((prev) => prev === "streaming" ? "completed" : prev);
     } catch (err) {
       setError(err.message);
       setStatus("error");

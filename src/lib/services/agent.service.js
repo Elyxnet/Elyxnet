@@ -38,11 +38,15 @@ export async function processQuery(walletAddress, userId, query, pointsCost = 10
 /**
  * Stream AI response from OpenRouter.
  */
-export async function streamFromOpenRouter(query) {
+export async function streamFromOpenRouter(query, infraMode = false) {
   if (!OPENROUTER_API_KEY) {
     // Return mock stream for development
     return null;
   }
+
+  const systemPrompt = infraMode
+    ? "You are the Elyxnet AI Agent running in Infrastructure Mode — a distributed intelligence engine utilizing 847+ nodes. Provide extremely thorough, data-driven research reports with deep analysis. Include source analysis, confidence scores, and multi-platform sentiment breakdowns. Use headers, bullet points, tables, and structured formatting. Be specific with numbers, sources, and cite platforms analyzed."
+    : "You are the Elyxnet AI Agent — a distributed intelligence engine. Provide thorough, data-driven research reports. Use headers, bullet points, and structured formatting. Be specific with numbers and sources.";
 
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
@@ -56,8 +60,7 @@ export async function streamFromOpenRouter(query) {
       messages: [
         {
           role: "system",
-          content:
-            "You are the Elyxnet AI Agent — a distributed intelligence engine. Provide thorough, data-driven research reports. Use headers, bullet points, and structured formatting. Be specific with numbers and sources.",
+          content: systemPrompt,
         },
         {
           role: "user",

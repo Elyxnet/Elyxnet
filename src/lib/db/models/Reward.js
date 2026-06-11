@@ -13,9 +13,11 @@ const RewardSchema = new mongoose.Schema(
       enum: [
         "infra_uptime",
         "social_connect",
+        "platform_link",
         "activity_bonus",
         "ai_query_spend",
         "referral",
+        "withdrawal",
       ],
       required: true,
     },

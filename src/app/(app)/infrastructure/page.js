@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import StatCard from "@/components/ui/StatCard";
 import SocialCard from "@/components/infrastructure/SocialCard";
@@ -14,7 +13,7 @@ export default function InfrastructurePage() {
   const shouldReduce = useReducedMotion();
   
   const { stats, isLoading: infraLoading } = useInfraStats();
-  const { accounts, isLoading: socialsLoading } = useSocials();
+  const { accounts, isLoading: socialsLoading, refresh: refreshSocials } = useSocials();
 
   if (infraLoading || socialsLoading) {
     return (
@@ -44,7 +43,7 @@ export default function InfrastructurePage() {
             Infrastructure
           </h2>
           <p className="text-[13px] text-text-muted mt-1">
-            Manage your infrastructure contribution and connected accounts
+            Link your social accounts and contribute to the distributed network
           </p>
         </div>
         <Badge variant={infraActive ? "yellow" : "muted"}>
@@ -86,9 +85,12 @@ export default function InfrastructurePage() {
 
       {/* Platform cards */}
       <div className="mb-6">
-        <h3 className="text-base font-medium text-text-primary mb-3">
-          Connected Platforms
+        <h3 className="text-base font-medium text-text-primary mb-1">
+          Your Platforms
         </h3>
+        <p className="text-[11px] text-text-muted mb-3">
+          Paste your profile links to connect accounts to the network. No OAuth needed.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {SocialCard.platforms.map((platformDef, i) => {
             const connectedAccount = accounts?.find(a => a.platform === platformDef.id);
@@ -96,11 +98,19 @@ export default function InfrastructurePage() {
               ...platformDef,
               connected: !!connectedAccount,
               username: connectedAccount?.username || "",
+              profileUrl: connectedAccount?.profileUrl || "",
               lastSync: connectedAccount?.lastSyncedAt || null,
               score: connectedAccount?.score || 0
             };
             
-            return <SocialCard key={platformDef.id} platform={enrichedPlatform} index={i} />;
+            return (
+              <SocialCard
+                key={platformDef.id}
+                platform={enrichedPlatform}
+                index={i}
+                onLinked={refreshSocials}
+              />
+            );
           })}
         </div>
       </div>

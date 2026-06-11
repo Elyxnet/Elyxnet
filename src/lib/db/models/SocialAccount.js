@@ -2,34 +2,29 @@ import mongoose from "mongoose";
 
 const SocialAccountSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    walletAddress: {
+      type: String,
       required: true,
+      lowercase: true,
+      index: true,
     },
-    walletAddress: { type: String, required: true, lowercase: true },
     platform: {
       type: String,
-      enum: ["x", "telegram", "discord", "youtube", "reddit"],
       required: true,
+      enum: ["x", "discord", "telegram", "youtube", "reddit", "linkedin"],
     },
-    platformUserId: String,
-    platformUsername: String,
-    accessToken: String,
-    refreshToken: String,
-    tokenExpiresAt: Date,
-    connectedAt: { type: Date, default: Date.now },
-    lastSyncedAt: Date,
-    contributionScore: { type: Number, default: 0 },
+    profileUrl: { type: String, default: "" },
+    username: { type: String, default: "" },
     isActive: { type: Boolean, default: true },
+    score: { type: Number, default: 0, min: 0, max: 100 },
+    linkedAt: { type: Date, default: Date.now },
+    lastSyncedAt: { type: Date },
   },
   { timestamps: true }
 );
 
-SocialAccountSchema.index(
-  { walletAddress: 1, platform: 1 },
-  { unique: true }
-);
+// Compound unique index: one platform per wallet
+SocialAccountSchema.index({ walletAddress: 1, platform: 1 }, { unique: true });
 
 export default mongoose.models.SocialAccount ||
   mongoose.model("SocialAccount", SocialAccountSchema);
