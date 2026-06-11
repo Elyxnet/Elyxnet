@@ -69,7 +69,7 @@ export default function AppLayout({ children }) {
             title="Dashboard"
             onMenuClick={() => setDrawerOpen(true)}
           />
-          <div className="px-6 py-8 max-md:px-4 max-md:py-6">{children}</div>
+          <div className="px-6 max-w-[1500px] mx-auto py-8 max-md:px-4 max-md:py-6">{children}</div>
         </main>
       </div>
     </ToastProvider>

@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { RiTwitterXLine, RiDiscordLine, RiYoutubeLine, RiTelegramLine, RiRedditLine, RiLinkedinLine, RiCheckLine, RiLinkM } from "react-icons/ri";
 import Badge from "@/components/ui/Badge";
 import ProgressBar from "@/components/ui/ProgressBar";
+import Button from "../ui/Button";
 
 const platforms = [
   {
@@ -164,13 +165,13 @@ export default function SocialCard({ platform, index = 0, onLinked }) {
                 onKeyDown={(e) => e.key === "Enter" && handleSaveLink()}
               />
             </div>
-            <button
+            <Button
               onClick={handleSaveLink}
               disabled={saving || !linkInput.trim()}
               className="h-9 px-4 rounded-lg bg-yellow-400 text-bg-base text-[12px] font-semibold hover:bg-yellow-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
             >
               {saving ? "Saving..." : "Link"}
-            </button>
+            </Button>
           </div>
           {error && <p className="text-red-400 text-[11px]">{error}</p>}
         </div>
