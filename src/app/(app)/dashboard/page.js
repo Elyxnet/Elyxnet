@@ -58,7 +58,7 @@ export default function DashboardPage() {
             Online
           </Badge>
           <span className="text-[13px] text-text-muted">
-            Elyxnet Network Node
+            Elyxnet Network
           </span>
         </div>
       </div>
@@ -112,13 +112,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Infrastructure overview */}
-      <div className={`border rounded-xl p-5 ${user.infraActive ? "bg-yellow-950/20 border-yellow-border" : "bg-bg-surface border-border-default"}`}>
+      <div className={`border border-dashed rounded-xl p-5 ${user.infraActive ? "bg-yellow-950/20 border-yellow-border" : "bg-bg-surface border-border-default"}`}>
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="text-base font-medium text-text-primary">
               Infrastructure Mode
             </h3>
-            <p className="text-[11px] text-text-muted mt-0.5">
+            <p className="text-xs text-text-muted mt-0.5">
               {user.infraActive ? "Your accounts are enrolled as distributed infrastructure" : "Enable in Infrastructure tab to start earning"}
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function DashboardPage() {
         {user.infraActive && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
             <div className="text-center py-2">
-              <p className="text-[11px] text-text-disabled uppercase tracking-wider mb-1">
+              <p className="text-xs font-semibold tracking-wide text-text-muted mb-1">
                 Allocated
               </p>
               <p className="text-lg font-semibold text-text-primary">
@@ -137,7 +137,7 @@ export default function DashboardPage() {
               <p className="text-[10px] text-text-muted">accounts</p>
             </div>
             <div className="text-center py-2">
-              <p className="text-[11px] text-text-disabled uppercase tracking-wider mb-1">
+              <p className="text-xs font-semibold tracking-wide text-text-muted mb-1">
                 Score
               </p>
               <p className="text-lg font-semibold text-text-primary">
@@ -146,7 +146,7 @@ export default function DashboardPage() {
               <p className="text-[10px] text-text-muted">rating</p>
             </div>
             <div className="text-center py-2">
-              <p className="text-[11px] text-text-disabled uppercase tracking-wider mb-1">
+              <p className="text-xs font-semibold tracking-wide text-text-muted mb-1">
                 Uptime
               </p>
               <p className="text-lg font-semibold text-text-primary">
@@ -155,7 +155,7 @@ export default function DashboardPage() {
               <p className="text-[10px] text-text-muted">reliability</p>
             </div>
             <div className="text-center py-2">
-              <p className="text-[11px] text-text-disabled uppercase tracking-wider mb-1">
+              <p className="text-xs font-semibold tracking-wide text-text-muted mb-1">
                 Streak
               </p>
               <p className="text-lg font-semibold text-green-400">
