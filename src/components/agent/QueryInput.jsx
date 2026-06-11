@@ -30,13 +30,13 @@ export default function QueryInput({ onSubmit, disabled = false, pointsCost = 10
         onKeyDown={handleKeyDown}
         disabled={disabled}
         placeholder="Ask the network anything…"
-        className="w-full min-h-[88px] resize-none bg-[--color-bg-surface] border border-[--color-border-default] rounded-xl
-          focus:border-[--color-yellow-400] transition-colors text-sm font-normal text-[--color-text-primary]
-          placeholder:text-[--color-text-disabled] p-4 outline-none focus:ring-2 focus:ring-[--color-yellow-950]"
+        className="w-full min-h-[88px] resize-none bg-bg-surface border border-border-default rounded-xl
+          focus:border-yellow-400 transition-colors text-sm font-normal text-text-primary
+          placeholder:text-text-disabled p-4 outline-none focus:ring-2 focus:ring-yellow-950"
       />
 
       <div className="flex items-center justify-between mt-3">
-        <span className="text-[11px] text-[--color-text-muted]">
+        <span className="text-[11px] text-text-muted">
           −{pointsCost} pts per query
         </span>
         <Button

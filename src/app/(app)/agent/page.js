@@ -1,179 +1,126 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { RiBrainLine } from "react-icons/ri";
 import QueryInput from "@/components/agent/QueryInput";
+import SuggestionChips from "@/components/agent/SuggestionChips";
 import ExecutionTrace from "@/components/agent/ExecutionTrace";
 import ResultCard from "@/components/agent/ResultCard";
-import SuggestionChips from "@/components/agent/SuggestionChips";
-
-// Execution stages with randomized durations
-const EXECUTION_STAGES = [
-  { id: "alloc", label: "Allocating infrastructure nodes", baseDelay: 1000 },
-  { id: "scan_x", label: "Scanning X / Twitter", baseDelay: 800 },
-  { id: "scan_reddit", label: "Scanning Reddit communities", baseDelay: 700 },
-  { id: "aggregate", label: "Aggregating sentiment data", baseDelay: 1500 },
-  { id: "cross_ref", label: "Cross-referencing sources", baseDelay: 900 },
-  { id: "generate", label: "Generating intelligence report", baseDelay: 1200 },
-];
-
-// Simulated AI response
-const MOCK_RESPONSE = `<h2>Bitcoin Sentiment Analysis</h2>
-<p>Based on distributed analysis across <strong>847 infrastructure nodes</strong>, here are the key findings:</p>
-
-<h3>Overall Sentiment: Moderately Bullish (68/100)</h3>
-
-<ul>
-<li><strong>X / Twitter</strong>: High engagement around ETF inflows. Sentiment score: 72/100</li>
-<li><strong>Reddit</strong>: r/bitcoin showing increased institutional discussion. Score: 65/100</li>
-<li><strong>Discord</strong>: Trading communities report accumulation patterns. Score: 71/100</li>
-</ul>
-
-<h3>Key Drivers</h3>
-<ol>
-<li><strong>Institutional accumulation</strong> — MicroStrategy and new ETF products driving positive narratives</li>
-<li><strong>On-chain metrics</strong> — Long-term holder supply at all-time highs</li>
-<li><strong>Macro environment</strong> — Favorable rate expectations boosting risk assets</li>
-</ol>
-
-<h3>Risk Factors</h3>
-<ul>
-<li>Leverage ratios in derivatives markets elevated above historical norms</li>
-<li>Potential regulatory actions in EU markets could cause short-term volatility</li>
-</ul>
-
-<p><em>Analysis completed using GPT-4o via distributed node network. Coverage: 94% of target platforms.</em></p>`;
-
-function jitter(base) {
-  return base + (Math.random() - 0.5) * 400;
-}
+import QueryHistory from "@/components/agent/QueryHistory";
+import Badge from "@/components/ui/Badge";
+import { useAgent } from "@/hooks/useAgent";
+import useSWR from "swr";
 
 export default function AgentPage() {
   const shouldReduce = useReducedMotion();
-  const [status, setStatus] = useState("idle");
-  const [stages, setStages] = useState([]);
-  const [nodeCount, setNodeCount] = useState(0);
-  const [result, setResult] = useState(null);
-  const [currentQuery, setCurrentQuery] = useState("");
-  const [duration, setDuration] = useState(null);
+  const { status, stages, content, duration, error, submitQuery, reset } = useAgent();
+  const resultRef = useRef(null);
 
-  const runExecution = useCallback(async (query) => {
-    setCurrentQuery(query);
-    setStatus("streaming");
-    setResult(null);
-    setDuration(null);
-    setNodeCount(0);
+  const { data: historyData, mutate: refreshHistory } = useSWR("/api/agent/history", (url) => fetch(url).then(r => r.json()));
 
-    const startTime = Date.now();
-
-    // Initialize all stages as pending
-    const initialStages = EXECUTION_STAGES.map((s) => ({
-      ...s,
-      state: "pending",
-    }));
-    setStages(initialStages);
-
-    // Simulate execution stages one by one
-    for (let i = 0; i < EXECUTION_STAGES.length; i++) {
-      const delay = jitter(EXECUTION_STAGES[i].baseDelay);
-      await new Promise((r) => setTimeout(r, delay));
-
-      setStages((prev) =>
-        prev.map((s, idx) => ({
-          ...s,
-          state: idx < i ? "done" : idx === i ? "active" : "pending",
-        }))
-      );
-
-      // Animate node count at step 0
-      if (i === 0) setNodeCount(847);
+  useEffect(() => {
+    if (status === "completed" && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      refreshHistory();
     }
-
-    // Final step — mark all done
-    await new Promise((r) => setTimeout(r, 600));
-    setStages((prev) => prev.map((s) => ({ ...s, state: "done" })));
-
-    // Set result
-    const elapsed = Date.now() - startTime;
-    setDuration(elapsed);
-    setResult({
-      query,
-      content: MOCK_RESPONSE,
-      model: "gpt-4o",
-      tokens: 1247,
-      pointsCost: 10,
-    });
-    setStatus("completed");
-  }, []);
-
-  const handleSubmit = (query) => {
-    runExecution(query);
-  };
+  }, [status, refreshHistory]);
 
   return (
-    <motion.div
-      initial={shouldReduce ? undefined : { opacity: 0, y: 8 }}
-      animate={shouldReduce ? undefined : { opacity: 1, y: 0 }}
-      transition={shouldReduce ? undefined : { duration: 0.2, ease: "easeOut" }}
-    >
-      {/* Page heading */}
-      <div className="mb-6">
-        <h2 className="text-[28px] font-bold tracking-[-0.03em] text-[--color-text-primary] leading-[1.1]">
-          AI Agent
-        </h2>
-        <p className="text-[13px] text-[--color-text-muted] mt-1">
-          Query the distributed intelligence network
-        </p>
-      </div>
-
-      {/* Split layout */}
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left panel — 60% */}
-        <div className="flex-1 lg:w-[60%] space-y-6">
-          <QueryInput
-            onSubmit={handleSubmit}
-            disabled={status === "streaming"}
-          />
-
-          {/* Suggestion chips — shown when idle */}
-          {status === "idle" && (
-            <div>
-              <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled] mb-3">
-                Suggested queries
-              </p>
-              <SuggestionChips onSelect={handleSubmit} />
+    <div className="h-full flex flex-col md:flex-row gap-6">
+      {/* Left Column: Input & Context */}
+      <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col gap-6">
+        <motion.div
+          initial={shouldReduce ? undefined : { opacity: 0, x: -16 }}
+          animate={shouldReduce ? undefined : { opacity: 1, x: 0 }}
+          transition={
+            shouldReduce ? undefined : { duration: 0.3, ease: "easeOut" }
+          }
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-purple-950 flex items-center justify-center border border-purple-900">
+              <RiBrainLine className="w-5 h-5 text-purple-400" />
             </div>
-          )}
+            <div>
+              <h2 className="text-[20px] font-bold text-text-primary leading-tight tracking-[-0.02em]">
+                Elyxnet Agent
+              </h2>
+              <div className="flex items-center gap-2 mt-0.5">
+                <Badge variant="purple" dot>
+                  v1.2.0 Active
+                </Badge>
+              </div>
+            </div>
+          </div>
 
-          {/* Result */}
-          {result && (
-            <ResultCard
-              query={result.query}
-              content={result.content}
-              model={result.model}
-              tokens={result.tokens}
-              pointsCost={result.pointsCost}
-              timestamp="Just now"
-            />
-          )}
-        </div>
+          <p className="text-[14px] text-text-secondary leading-relaxed mb-6">
+            Leverage the distributed intelligence of the Elyxnet network. Queries cost 10 points and utilize active infrastructure nodes to crawl, aggregate, and synthesize data.
+          </p>
 
-        {/* Right panel — 40% */}
-        <div className="lg:w-[40%]">
-          <ExecutionTrace
-            stages={stages}
-            nodeCount={nodeCount}
-            status={status}
-            duration={duration}
-            pointsCost={10}
-            metrics={
-              status !== "idle"
-                ? { coverage: "94%", depth: "4 layers", utilization: "67%" }
-                : {}
-            }
-          />
-        </div>
+          <QueryInput onSubmit={submitQuery} isStreaming={status === "streaming"} />
+          <SuggestionChips onSelect={submitQuery} disabled={status === "streaming"} />
+        </motion.div>
+
+        <motion.div
+          initial={shouldReduce ? undefined : { opacity: 0, x: -16 }}
+          animate={shouldReduce ? undefined : { opacity: 1, x: 0 }}
+          transition={
+            shouldReduce
+              ? undefined
+              : { duration: 0.3, delay: 0.1, ease: "easeOut" }
+          }
+          className="flex-1 overflow-y-auto"
+        >
+          <QueryHistory queries={historyData?.history || []} />
+        </motion.div>
       </div>
-    </motion.div>
+
+      {/* Right Column: Execution & Results */}
+      <div className="w-full md:w-[55%] lg:w-[60%] flex flex-col gap-6 min-h-[500px]">
+        {status === "idle" ? (
+          <motion.div
+            initial={shouldReduce ? undefined : { opacity: 0 }}
+            animate={shouldReduce ? undefined : { opacity: 1 }}
+            className="flex-1 flex flex-col items-center justify-center text-center p-8 border border-dashed border-border-strong rounded-2xl bg-bg-surface/50"
+          >
+            <div className="w-16 h-16 rounded-2xl bg-bg-raised flex items-center justify-center mb-4 border border-border-default">
+              <RiBrainLine className="w-8 h-8 text-text-disabled" />
+            </div>
+            <h3 className="text-[16px] font-medium text-text-secondary mb-2">
+              Agent Standby
+            </h3>
+            <p className="text-[13px] text-text-muted max-w-sm">
+              Enter a query to initiate distributed data collection and analysis.
+            </p>
+          </motion.div>
+        ) : (
+          <div className="flex flex-col gap-6" ref={resultRef}>
+            {(status === "streaming" || stages.length > 0) && (
+              <ExecutionTrace
+                stages={stages}
+                isComplete={status === "completed" || status === "error"}
+                duration={duration}
+              />
+            )}
+
+            {(content || status === "completed") && (
+              <ResultCard content={content} isStreaming={status === "streaming"} />
+            )}
+
+            {status === "error" && (
+              <div className="p-4 bg-red-950/30 border border-red-950 rounded-xl text-[13px] text-red-400">
+                {error || "An error occurred during execution. Points have been refunded."}
+                <button
+                  onClick={reset}
+                  className="mt-3 px-4 py-2 bg-red-950 text-red-400 font-medium rounded-lg hover:bg-red-900 transition-colors"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

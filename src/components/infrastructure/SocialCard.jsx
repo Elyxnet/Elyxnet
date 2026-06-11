@@ -11,7 +11,7 @@ const platforms = [
     id: "x",
     name: "X / Twitter",
     icon: RiTwitterXLine,
-    iconColor: "text-[--color-text-primary]",
+    iconColor: "text-text-primary",
     connected: true,
     username: "@elyxnet_user",
     lastSync: "2m ago",
@@ -31,7 +31,7 @@ const platforms = [
     id: "telegram",
     name: "Telegram",
     icon: RiTelegramLine,
-    iconColor: "text-[--color-blue-400]",
+    iconColor: "text-blue-400",
     connected: true,
     username: "@elyx_tg",
     lastSync: "12m ago",
@@ -41,7 +41,7 @@ const platforms = [
     id: "youtube",
     name: "YouTube",
     icon: RiYoutubeLine,
-    iconColor: "text-[--color-red-400]",
+    iconColor: "text-red-400",
     connected: true,
     username: "Elyxnet Channel",
     lastSync: "1h ago",
@@ -51,7 +51,7 @@ const platforms = [
     id: "reddit",
     name: "Reddit",
     icon: RiRedditLine,
-    iconColor: "text-[--color-text-muted]",
+    iconColor: "text-text-muted",
     connected: false,
     comingSoon: true,
   },
@@ -59,7 +59,7 @@ const platforms = [
     id: "linkedin",
     name: "LinkedIn",
     icon: RiLinkedinLine,
-    iconColor: "text-[--color-text-muted]",
+    iconColor: "text-text-muted",
     connected: false,
     comingSoon: true,
   },
@@ -79,16 +79,16 @@ export default function SocialCard({ platform, index = 0 }) {
           ? undefined
           : { duration: 0.25, delay: index * 0.06, ease: "easeOut" }
       }
-      className={`bg-[--color-bg-raised] border rounded-xl p-4 transition-all duration-150 ${
+      className={`bg-bg-raised border rounded-xl p-4 transition-all duration-150 ${
         p.connected
-          ? "border-l-2 border-l-[--color-yellow-400] border-t border-r border-b border-t-[--color-border-default] border-r-[--color-border-default] border-b-[--color-border-default]"
-          : "border-[--color-border-default]"
+          ? "border-l-2 border-l-yellow-400 border-t border-r border-b border-t-border-default border-r-border-default border-b-border-default"
+          : "border-border-default"
       }`}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
           <Icon className={`w-5 h-5 ${p.iconColor}`} />
-          <span className="text-sm font-medium text-[--color-text-primary]">
+          <span className="text-sm font-medium text-text-primary">
             {p.name}
           </span>
         </div>
@@ -106,21 +106,21 @@ export default function SocialCard({ platform, index = 0 }) {
       {p.connected && (
         <>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[12px] font-mono text-[--color-text-secondary]">
+            <span className="text-[12px] font-mono text-text-secondary">
               {p.username}
             </span>
-            <span className="text-[11px] text-[--color-text-disabled]">
+            <span className="text-[11px] text-text-disabled">
               Last synced: {p.lastSync}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-[--color-text-disabled]">
+            <span className="text-[11px] text-text-disabled">
               Score: {p.score}
             </span>
             <ProgressBar
               value={p.score}
               max={100}
-              color="bg-[--color-yellow-400]"
+              color="bg-yellow-400"
               className="flex-1"
             />
           </div>
@@ -134,7 +134,7 @@ export default function SocialCard({ platform, index = 0 }) {
       )}
 
       {p.comingSoon && (
-        <p className="text-[11px] text-[--color-text-disabled] mt-2">
+        <p className="text-[11px] text-text-disabled mt-2">
           This platform will be available in a future update.
         </p>
       )}

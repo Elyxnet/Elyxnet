@@ -5,10 +5,10 @@ import { useCountUp } from "@/hooks/useCountUp";
 import ProgressBar from "./ProgressBar";
 
 const colorMap = {
-  yellow: "bg-[--color-yellow-400]",
-  blue: "bg-[--color-blue-400]",
-  purple: "bg-[--color-purple-400]",
-  green: "bg-[--color-green-400]",
+  yellow: "bg-yellow-400",
+  blue: "bg-blue-400",
+  purple: "bg-purple-400",
+  green: "bg-green-400",
 };
 
 export default function StatCard({
@@ -42,19 +42,19 @@ export default function StatCard({
       }
       className={`rounded-xl p-5 border ${
         primary
-          ? "border-[--color-yellow-border] bg-[--color-yellow-950]/20"
-          : "border-[--color-border-default] bg-[--color-bg-surface]"
+          ? "border-yellow-border bg-yellow-950/20"
+          : "border-border-default bg-bg-surface"
       }`}
     >
       {/* Caption label */}
-      <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled] mb-2">
+      <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled mb-2">
         {label}
       </p>
 
       {/* Value */}
       <p
         className={`text-[22px] font-semibold tracking-[-0.02em] leading-tight ${
-          primary ? "text-[--color-yellow-400]" : "text-[--color-text-primary]"
+          primary ? "text-yellow-400" : "text-text-primary"
         }`}
       >
         {displayValue}
@@ -62,7 +62,7 @@ export default function StatCard({
 
       {/* Subline */}
       {subline && (
-        <p className="text-[11px] text-[--color-text-muted] mt-1">{subline}</p>
+        <p className="text-[11px] text-text-muted mt-1">{subline}</p>
       )}
 
       {/* Progress bar */}

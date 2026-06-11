@@ -42,16 +42,16 @@ export default function MobileDrawer({ open, onClose, wallet, infraActive, onInf
             animate={{ x: 0 }}
             exit={{ x: -224 }}
             transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed left-0 top-0 bottom-0 w-56 bg-[--color-bg-raised] border-r border-[--color-border-default] z-50 flex flex-col md:hidden"
+            className="fixed left-0 top-0 bottom-0 w-56 bg-bg-raised border-r border-border-default z-50 flex flex-col md:hidden"
           >
             {/* Header */}
-            <div className="px-5 h-14 flex items-center justify-between border-b border-[--color-border-default]">
-              <span className="text-[--color-yellow-400] font-bold text-[15px] tracking-[-0.01em]">
+            <div className="px-5 h-14 flex items-center justify-between border-b border-border-default">
+              <span className="text-yellow-400 font-bold text-[15px] tracking-[-0.01em]">
                 ELYXNET
               </span>
               <button
                 onClick={onClose}
-                className="text-[--color-text-muted] hover:text-[--color-text-primary] transition-colors p-1"
+                className="text-text-muted hover:text-text-primary transition-colors p-1"
               >
                 <RiCloseLine className="w-5 h-5" />
               </button>
@@ -71,13 +71,13 @@ export default function MobileDrawer({ open, onClose, wallet, infraActive, onInf
                     className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150
                       ${
                         isActive
-                          ? "bg-[--color-bg-surface] text-[--color-text-primary] border border-[--color-border-subtle]"
-                          : "text-[--color-text-muted] hover:text-[--color-text-primary] hover:bg-[--color-bg-hover] border border-transparent"
+                          ? "bg-bg-surface text-text-primary border border-border-subtle"
+                          : "text-text-muted hover:text-text-primary hover:bg-bg-hover border border-transparent"
                       }
-                      ${link.accent && isActive ? "text-[--color-yellow-400]" : ""}
+                      ${link.accent && isActive ? "text-yellow-400" : ""}
                     `}
                   >
-                    <Icon className={`w-4 h-4 shrink-0 ${link.accent && isActive ? "text-[--color-yellow-400]" : ""}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${link.accent && isActive ? "text-yellow-400" : ""}`} />
                     {link.label}
                   </Link>
                 );
@@ -86,23 +86,23 @@ export default function MobileDrawer({ open, onClose, wallet, infraActive, onInf
 
             {/* Bottom */}
             <div className="px-3 pb-4 space-y-3">
-              <div className="bg-[--color-yellow-950]/30 border border-[--color-yellow-border] rounded-xl p-3">
+              <div className="bg-yellow-950/30 border border-yellow-border rounded-xl p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[12px] font-medium text-[--color-text-secondary]">Infra Mode</p>
-                    <p className="text-[11px] text-[--color-text-disabled]">{infraActive ? "Active" : "Inactive"}</p>
+                    <p className="text-[12px] font-medium text-text-secondary">Infra Mode</p>
+                    <p className="text-[11px] text-text-disabled">{infraActive ? "Active" : "Inactive"}</p>
                   </div>
                   <Toggle active={infraActive} onChange={onInfraToggle} />
                 </div>
               </div>
 
               <div className="flex items-center gap-2 px-3 py-2">
-                <div className="w-6 h-6 rounded-full bg-[--color-yellow-950] border border-[--color-yellow-border] flex items-center justify-center">
-                  <span className="text-[10px] text-[--color-yellow-400] font-bold">
+                <div className="w-6 h-6 rounded-full bg-yellow-950 border border-yellow-border flex items-center justify-center">
+                  <span className="text-[10px] text-yellow-400 font-bold">
                     {wallet ? wallet.slice(2, 4).toUpperCase() : "EX"}
                   </span>
                 </div>
-                <span className="font-mono text-[12px] text-[--color-text-secondary] truncate">
+                <span className="font-mono text-[12px] text-text-secondary truncate">
                   {truncateWallet(wallet)}
                 </span>
               </div>

@@ -12,9 +12,9 @@ import {
 const ToastContext = createContext(null);
 
 const icons = {
-  success: <RiCheckLine className="w-4 h-4 text-[--color-green-400]" />,
-  error: <RiErrorWarningLine className="w-4 h-4 text-[--color-red-400]" />,
-  info: <RiInformationLine className="w-4 h-4 text-[--color-blue-400]" />,
+  success: <RiCheckLine className="w-4 h-4 text-green-400" />,
+  error: <RiErrorWarningLine className="w-4 h-4 text-red-400" />,
+  info: <RiInformationLine className="w-4 h-4 text-blue-400" />,
 };
 
 export function useToast() {
@@ -60,15 +60,15 @@ export default function ToastProvider({ children }) {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 40, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="flex items-center gap-2.5 bg-[--color-bg-raised] border border-[--color-border-subtle] rounded-lg px-4 py-3 shadow-lg"
+              className="flex items-center gap-2.5 bg-bg-raised border border-border-subtle rounded-lg px-4 py-3 shadow-lg"
             >
               {icons[t.type]}
-              <span className="text-sm text-[--color-text-primary] flex-1">
+              <span className="text-sm text-text-primary flex-1">
                 {t.message}
               </span>
               <button
                 onClick={() => removeToast(t.id)}
-                className="text-[--color-text-disabled] hover:text-[--color-text-muted] transition-colors p-0.5"
+                className="text-text-disabled hover:text-text-muted transition-colors p-0.5"
               >
                 <RiCloseLine className="w-3.5 h-3.5" />
               </button>

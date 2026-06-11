@@ -20,16 +20,18 @@ const leaderboardData = [
   { rank: 15, wallet: "0xc3f8...6e9b", score: 782, points: 59800, accounts: 3 },
 ];
 
-export default function Leaderboard() {
+export default function Leaderboard({ data = [] }) {
   const shouldReduce = useReducedMotion();
 
+  const displayData = data.length > 0 ? data : leaderboardData;
+
   return (
-    <div className="bg-[--color-bg-surface] border border-[--color-border-default] rounded-xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-[--color-border-default]">
-        <h3 className="text-base font-medium text-[--color-text-primary]">
+    <div className="bg-bg-surface border border-border-default rounded-xl overflow-hidden">
+      <div className="px-5 py-4 border-b border-border-default">
+        <h3 className="text-base font-medium text-text-primary">
           Network Leaderboard
         </h3>
-        <p className="text-[11px] text-[--color-text-muted] mt-0.5">
+        <p className="text-[11px] text-text-muted mt-0.5">
           Top contributors ranked by infrastructure score
         </p>
       </div>
@@ -37,28 +39,28 @@ export default function Leaderboard() {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[--color-border-default]">
-              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled]">
+            <tr className="border-b border-border-default">
+              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled">
                 Rank
               </th>
-              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled]">
+              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled">
                 Wallet
               </th>
-              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled]">
+              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled">
                 Score
               </th>
-              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled]">
+              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled">
                 Points
               </th>
-              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled]">
+              <th className="text-left px-5 py-3 text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled">
                 Accounts
               </th>
             </tr>
           </thead>
           <tbody>
-            {leaderboardData.map((row, i) => (
+            {displayData.map((row, i) => (
               <motion.tr
-                key={row.rank}
+                key={row.rank || i}
                 initial={shouldReduce ? undefined : { opacity: 0 }}
                 animate={shouldReduce ? undefined : { opacity: 1 }}
                 transition={
@@ -66,45 +68,45 @@ export default function Leaderboard() {
                     ? undefined
                     : { duration: 0.2, delay: i * 0.03, ease: "easeOut" }
                 }
-                className={`border-b border-[--color-border-default] last:border-b-0 transition-colors ${
+                className={`border-b border-border-default last:border-b-0 transition-colors ${
                   row.isYou
-                    ? "bg-[--color-yellow-950]/30"
-                    : "hover:bg-[--color-bg-hover]"
+                    ? "bg-yellow-950/30"
+                    : "hover:bg-bg-hover"
                 }`}
               >
                 <td className="px-5 py-3">
                   <span
                     className={`text-[13px] font-semibold ${
                       row.rank <= 3
-                        ? "text-[--color-yellow-400]"
-                        : "text-[--color-text-primary]"
+                        ? "text-yellow-400"
+                        : "text-text-primary"
                     }`}
                   >
                     #{row.rank}
                   </span>
                 </td>
                 <td className="px-5 py-3">
-                  <span className="font-mono text-[12px] text-[--color-text-secondary]">
+                  <span className="font-mono text-[12px] text-text-secondary">
                     {row.wallet}
                   </span>
                   {row.isYou && (
-                    <span className="ml-2 text-[10px] font-medium text-[--color-yellow-400] bg-[--color-yellow-950] px-1.5 py-0.5 rounded">
+                    <span className="ml-2 text-[10px] font-medium text-yellow-400 bg-yellow-950 px-1.5 py-0.5 rounded">
                       YOU
                     </span>
                   )}
                 </td>
                 <td className="px-5 py-3">
-                  <span className="text-[13px] font-medium text-[--color-text-primary]">
+                  <span className="text-[13px] font-medium text-text-primary">
                     {row.score}
                   </span>
                 </td>
                 <td className="px-5 py-3">
-                  <span className="text-[13px] text-[--color-text-secondary]">
+                  <span className="text-[13px] text-text-secondary">
                     {row.points.toLocaleString()}
                   </span>
                 </td>
                 <td className="px-5 py-3">
-                  <span className="text-[13px] text-[--color-text-muted]">
+                  <span className="text-[13px] text-text-muted">
                     {row.accounts}
                   </span>
                 </td>

@@ -5,9 +5,9 @@ import { useCountUp } from "@/hooks/useCountUp";
 import ProgressBar from "@/components/ui/ProgressBar";
 
 const stageStates = {
-  pending: "w-1.5 h-1.5 rounded-full bg-[--color-bg-active]",
-  active: "w-1.5 h-1.5 rounded-full bg-[--color-yellow-400] animate-pulse",
-  done: "w-1.5 h-1.5 rounded-full bg-[--color-green-400]",
+  pending: "w-1.5 h-1.5 rounded-full bg-bg-active",
+  active: "w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse",
+  done: "w-1.5 h-1.5 rounded-full bg-green-400",
 };
 
 export default function ExecutionTrace({
@@ -28,25 +28,25 @@ export default function ExecutionTrace({
       initial={shouldReduce ? undefined : { x: 24, opacity: 0 }}
       animate={shouldReduce ? undefined : { x: 0, opacity: 1 }}
       transition={shouldReduce ? undefined : { duration: 0.3, ease: "easeOut" }}
-      className="bg-[--color-bg-raised] border border-[--color-border-default] rounded-xl p-5 sticky top-20"
+      className="bg-bg-raised border border-border-default rounded-xl p-5 sticky top-20"
     >
       {/* Header */}
-      <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled] mb-4">
+      <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled mb-4">
         Execution trace
       </p>
 
       {/* Node allocation */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[12px] text-[--color-text-muted]">Nodes allocated</span>
-          <span className="text-sm font-semibold text-[--color-text-primary]">
+          <span className="text-[12px] text-text-muted">Nodes allocated</span>
+          <span className="text-sm font-semibold text-text-primary">
             {animatedNodes.toLocaleString()}
           </span>
         </div>
         <ProgressBar
           value={nodeCount}
           max={1200}
-          color="bg-[--color-yellow-400]"
+          color="bg-yellow-400"
         />
       </div>
 
@@ -68,10 +68,10 @@ export default function ExecutionTrace({
             <span
               className={`text-[13px] ${
                 stage.state === "done"
-                  ? "text-[--color-text-primary]"
+                  ? "text-text-primary"
                   : stage.state === "active"
-                  ? "text-[--color-yellow-400]"
-                  : "text-[--color-text-disabled]"
+                  ? "text-yellow-400"
+                  : "text-text-disabled"
               }`}
             >
               {stage.label}
@@ -82,33 +82,33 @@ export default function ExecutionTrace({
 
       {/* Metrics */}
       {(metrics.coverage || metrics.depth || metrics.utilization) && (
-        <div className="flex items-center gap-4 mb-4 pt-3 border-t border-[--color-border-default]">
+        <div className="flex items-center gap-4 mb-4 pt-3 border-t border-border-default">
           {metrics.coverage && (
             <div>
-              <p className="text-[10px] text-[--color-text-disabled] uppercase tracking-wider">
+              <p className="text-[10px] text-text-disabled uppercase tracking-wider">
                 Coverage
               </p>
-              <p className="text-[13px] font-medium text-[--color-text-primary]">
+              <p className="text-[13px] font-medium text-text-primary">
                 {metrics.coverage}
               </p>
             </div>
           )}
           {metrics.depth && (
             <div>
-              <p className="text-[10px] text-[--color-text-disabled] uppercase tracking-wider">
+              <p className="text-[10px] text-text-disabled uppercase tracking-wider">
                 Depth
               </p>
-              <p className="text-[13px] font-medium text-[--color-text-primary]">
+              <p className="text-[13px] font-medium text-text-primary">
                 {metrics.depth}
               </p>
             </div>
           )}
           {metrics.utilization && (
             <div>
-              <p className="text-[10px] text-[--color-text-disabled] uppercase tracking-wider">
+              <p className="text-[10px] text-text-disabled uppercase tracking-wider">
                 Utilization
               </p>
-              <p className="text-[13px] font-medium text-[--color-text-primary]">
+              <p className="text-[13px] font-medium text-text-primary">
                 {metrics.utilization}
               </p>
             </div>
@@ -117,24 +117,24 @@ export default function ExecutionTrace({
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-[--color-border-default]">
-        <span className="text-[11px] text-[--color-text-muted]">
+      <div className="flex items-center justify-between pt-3 border-t border-border-default">
+        <span className="text-[11px] text-text-muted">
           −{pointsCost} pts
         </span>
         {status === "streaming" ? (
-          <span className="text-[11px] font-medium text-[--color-yellow-400] animate-pulse">
+          <span className="text-[11px] font-medium text-yellow-400 animate-pulse">
             Streaming…
           </span>
         ) : status === "completed" && duration ? (
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-[11px] font-medium text-[--color-green-400]"
+            className="text-[11px] font-medium text-green-400"
           >
             Completed in {(duration / 1000).toFixed(1)}s
           </motion.span>
         ) : (
-          <span className="text-[11px] text-[--color-text-disabled]">
+          <span className="text-[11px] text-text-disabled">
             Waiting…
           </span>
         )}

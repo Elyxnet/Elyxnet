@@ -24,9 +24,9 @@ const data = [
 function CustomTooltip({ active, payload, label }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[--color-bg-surface] border border-[--color-border-subtle] rounded-lg px-3 py-2">
-        <p className="text-[11px] text-[--color-text-muted]">{label}</p>
-        <p className="text-sm font-semibold text-[--color-yellow-400]">
+      <div className="bg-bg-surface border border-border-subtle rounded-lg px-3 py-2">
+        <p className="text-[11px] text-text-muted">{label}</p>
+        <p className="text-sm font-semibold text-yellow-400">
           +{payload[0].value} pts
         </p>
       </div>
@@ -37,11 +37,11 @@ function CustomTooltip({ active, payload, label }) {
 
 export default function RewardChart() {
   return (
-    <div className="bg-[--color-bg-surface] border border-[--color-border-default] rounded-xl p-5">
-      <h3 className="text-base font-medium text-[--color-text-primary] mb-1">
+    <div className="bg-bg-surface border border-border-default rounded-xl p-5">
+      <h3 className="text-base font-medium text-text-primary mb-1">
         Reward Growth
       </h3>
-      <p className="text-[11px] text-[--color-text-muted] mb-4">
+      <p className="text-[11px] text-text-muted mb-4">
         Points accrued over the last 7 days
       </p>
 

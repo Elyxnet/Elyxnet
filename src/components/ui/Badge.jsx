@@ -3,28 +3,28 @@
 const presets = {
   yellow: {
     wrapper:
-      "bg-[--color-yellow-950] text-[--color-yellow-400] border border-[--color-yellow-border]",
+      "bg-yellow-950 text-yellow-400 border border-yellow-border",
   },
   green: {
     wrapper:
-      "bg-[--color-green-950] text-[--color-green-400] border border-[--color-green-border]",
+      "bg-green-950 text-green-400 border border-green-border",
     dot: true,
   },
   blue: {
     wrapper:
-      "bg-[--color-blue-950] text-[--color-blue-400] border border-[--color-blue-950]",
+      "bg-blue-950 text-blue-400 border border-blue-950",
   },
   purple: {
     wrapper:
-      "bg-[--color-purple-950] text-[--color-purple-400] border border-[--color-purple-950]",
+      "bg-purple-950 text-purple-400 border border-purple-950",
   },
   red: {
     wrapper:
-      "bg-[--color-red-950] text-[--color-red-400] border border-[--color-red-950]",
+      "bg-red-950 text-red-400 border border-red-950",
   },
   muted: {
     wrapper:
-      "bg-[--color-bg-surface] text-[--color-text-disabled] border border-[--color-border-default]",
+      "bg-bg-surface text-text-disabled border border-border-default",
   },
 };
 

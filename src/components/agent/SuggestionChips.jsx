@@ -40,12 +40,12 @@ export default function SuggestionChips({ onSelect }) {
                 : { duration: 0.2, delay: i * 0.08, ease: "easeOut" }
             }
             onClick={() => onSelect(s.text)}
-            className="flex items-start gap-3 bg-[--color-bg-surface] border border-[--color-border-default] rounded-lg p-3
-              hover:border-[--color-border-subtle] cursor-pointer text-left transition-all duration-150
+            className="flex items-start gap-3 bg-bg-surface border border-border-default rounded-lg p-3
+              hover:border-border-subtle cursor-pointer text-left transition-all duration-150
               hover:scale-[1.01] active:scale-[0.98]"
           >
-            <Icon className="w-4 h-4 text-[--color-text-disabled] mt-0.5 shrink-0" />
-            <span className="text-[13px] text-[--color-text-secondary]">
+            <Icon className="w-4 h-4 text-text-disabled mt-0.5 shrink-0" />
+            <span className="text-[13px] text-text-secondary">
               {s.text}
             </span>
           </motion.button>

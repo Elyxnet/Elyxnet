@@ -10,12 +10,19 @@ const globalStats = [
   { label: "Active Contributors", value: 3842, color: "green" },
 ];
 
-export default function GlobalStats() {
+export default function GlobalStats({ stats }) {
   const shouldReduce = useReducedMotion();
+
+  const dynamicStats = [
+    { label: "Total Nodes", value: stats?.totalNodes || 12847, color: "yellow" },
+    { label: "Points Distributed", value: stats?.totalPoints || 4200000, color: "yellow", formatter: (v) => `$${(v / 1000000).toFixed(1)}M` },
+    { label: "Queries Served", value: stats?.totalQueries || 847000, color: "purple", formatter: (v) => `${(v / 1000).toFixed(0)}K` },
+    { label: "Active Contributors", value: stats?.activeContributors || 3842, color: "green" },
+  ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      {globalStats.map((stat, i) => (
+      {dynamicStats.map((stat, i) => (
         <StatCard
           key={stat.label}
           label={stat.label}

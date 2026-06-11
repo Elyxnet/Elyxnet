@@ -6,10 +6,30 @@ import StatCard from "@/components/ui/StatCard";
 import SocialCard from "@/components/infrastructure/SocialCard";
 import InfraModePanel from "@/components/infrastructure/InfraModePanel";
 import Badge from "@/components/ui/Badge";
+import { useInfraStats } from "@/hooks/useInfraStats";
+import { useSocials } from "@/hooks/useSocials";
+import Skeleton from "@/components/ui/Skeleton";
 
 export default function InfrastructurePage() {
   const shouldReduce = useReducedMotion();
-  const [infraActive, setInfraActive] = useState(true);
+  
+  const { stats, isLoading: infraLoading } = useInfraStats();
+  const { accounts, isLoading: socialsLoading } = useSocials();
+
+  if (infraLoading || socialsLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="w-64 h-10" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[1,2,3].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
+        </div>
+        <Skeleton className="h-64 rounded-xl" />
+      </div>
+    );
+  }
+
+  const infraActive = stats?.node?.status === "active";
+  const node = stats?.node || {};
 
   return (
     <motion.div
@@ -20,10 +40,10 @@ export default function InfrastructurePage() {
       {/* Page header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-[28px] font-bold tracking-[-0.03em] text-[--color-text-primary] leading-[1.1]">
+          <h2 className="text-[28px] font-bold tracking-[-0.03em] text-text-primary leading-[1.1]">
             Infrastructure
           </h2>
-          <p className="text-[13px] text-[--color-text-muted] mt-1">
+          <p className="text-[13px] text-text-muted mt-1">
             Manage your infrastructure contribution and connected accounts
           </p>
         </div>
@@ -36,9 +56,9 @@ export default function InfrastructurePage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         <StatCard
           label="Uptime"
-          value={99.7}
+          value={node.uptimePercent || 0}
           subline="Last 30 days"
-          progress={99.7}
+          progress={node.uptimePercent || 0}
           progressMax={100}
           color="green"
           index={0}
@@ -46,18 +66,18 @@ export default function InfrastructurePage() {
         />
         <StatCard
           label="Contribution Score"
-          value={847}
+          value={node.contributionScore || 0}
           subline="Top contributor tier"
-          progress={847}
+          progress={node.contributionScore || 0}
           progressMax={1000}
           color="yellow"
           index={1}
         />
         <StatCard
           label="Network Rank"
-          value="Top 12%"
-          subline="Among 12,847 nodes"
-          progress={88}
+          value={stats?.networkRankPercent ? `Top ${stats.networkRankPercent}%` : "N/A"}
+          subline={`Among ${stats?.totalNodes || 0} nodes`}
+          progress={100 - (stats?.networkRankPercent || 100)}
           progressMax={100}
           color="purple"
           index={2}
@@ -66,20 +86,35 @@ export default function InfrastructurePage() {
 
       {/* Platform cards */}
       <div className="mb-6">
-        <h3 className="text-base font-medium text-[--color-text-primary] mb-3">
+        <h3 className="text-base font-medium text-text-primary mb-3">
           Connected Platforms
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {SocialCard.platforms.map((platform, i) => (
-            <SocialCard key={platform.id} platform={platform} index={i} />
-          ))}
+          {SocialCard.platforms.map((platformDef, i) => {
+            const connectedAccount = accounts?.find(a => a.platform === platformDef.id);
+            const enrichedPlatform = {
+              ...platformDef,
+              connected: !!connectedAccount,
+              username: connectedAccount?.username || "",
+              lastSync: connectedAccount?.lastSyncedAt || null,
+              score: connectedAccount?.score || 0
+            };
+            
+            return <SocialCard key={platformDef.id} platform={enrichedPlatform} index={i} />;
+          })}
         </div>
       </div>
 
       {/* Infra Mode Panel */}
       <InfraModePanel
         active={infraActive}
-        onToggle={setInfraActive}
+        onToggle={async (val) => {
+          if (val) {
+            await fetch('/api/infra/activate', { method: 'POST' });
+          } else {
+            await fetch('/api/infra/deactivate', { method: 'POST' });
+          }
+        }}
       />
     </motion.div>
   );

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme  {
+@theme {
   /* Brand yellows */
   --color-yellow-400: #E6B93C;
   --color-yellow-200: #F5D278;
@@ -44,41 +44,43 @@
 }
 
 /* ── Base styles ── */
-body {
-  background-color: var(--color-bg-base);
-  color: var(--color-text-primary);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@layer base {
+  body {
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
 
-::-webkit-scrollbar-track {
-  background: var(--color-bg-base);
-}
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-base);
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-border-subtle);
-  border-radius: 3px;
-}
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-subtle);
+    border-radius: 3px;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-strong);
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-strong);
+  }
 
-/* ── Selection ── */
-::selection {
-  background: var(--color-yellow-950);
-  color: var(--color-yellow-400);
-}
+  /* ── Selection ── */
+  ::selection {
+    background: var(--color-yellow-950);
+    color: var(--color-yellow-400);
+  }
 
-/* ── Focus visible ── */
-*:focus-visible {
-  outline: 2px solid var(--color-yellow-400);
-  outline-offset: 2px;
+  /* ── Focus visible ── */
+  *:focus-visible {
+    outline: 2px solid var(--color-yellow-400);
+    outline-offset: 2px;
+  }
 }

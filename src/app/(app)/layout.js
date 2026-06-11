@@ -28,7 +28,7 @@ export default function AppLayout({ children }) {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[--color-bg-base]">
+      <div className="min-h-screen bg-bg-base">
         {/* Desktop Sidebar */}
         <Sidebar
           wallet={wallet}
@@ -46,7 +46,7 @@ export default function AppLayout({ children }) {
         />
 
         {/* Main content */}
-        <main className="md:ml-56 min-h-screen bg-[--color-bg-base]">
+        <main className="md:ml-56 min-h-screen bg-bg-base">
           <Topbar
             title="Dashboard"
             onMenuClick={() => setDrawerOpen(true)}

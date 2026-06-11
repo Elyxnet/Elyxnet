@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "date-fns": "^4.4.0",
     "jose": "^6.2.3",
     "mongoose": "^9.6.3",
     "motion": "^12.40.0",

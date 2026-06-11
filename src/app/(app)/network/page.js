@@ -3,9 +3,24 @@
 import { motion, useReducedMotion } from "motion/react";
 import GlobalStats from "@/components/network/GlobalStats";
 import Leaderboard from "@/components/network/Leaderboard";
+import { useNetwork } from "@/hooks/useNetwork";
+import Skeleton from "@/components/ui/Skeleton";
 
 export default function NetworkPage() {
   const shouldReduce = useReducedMotion();
+  const { stats, leaderboard, isLoading } = useNetwork();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="w-64 h-10" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[1,2,3,4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
+        </div>
+        <Skeleton className="h-96 rounded-xl" />
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -15,30 +30,30 @@ export default function NetworkPage() {
     >
       {/* Page heading */}
       <div className="mb-6">
-        <h2 className="text-[28px] font-bold tracking-[-0.03em] text-[--color-text-primary] leading-[1.1]">
+        <h2 className="text-[28px] font-bold tracking-[-0.03em] text-text-primary leading-[1.1]">
           Network
         </h2>
-        <p className="text-[13px] text-[--color-text-muted] mt-1">
+        <p className="text-[13px] text-text-muted mt-1">
           Global infrastructure statistics and contributor rankings
         </p>
       </div>
 
       {/* Global stats */}
       <div className="mb-6">
-        <GlobalStats />
+        <GlobalStats stats={stats} />
       </div>
 
       {/* Leaderboard */}
       <div className="mb-6">
-        <Leaderboard />
+        <Leaderboard data={leaderboard} />
       </div>
 
       {/* Network map placeholder */}
-      <div className="bg-[--color-bg-surface] border border-[--color-border-default] rounded-xl p-6">
-        <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-[--color-text-disabled] mb-4">
+      <div className="bg-bg-surface border border-border-default rounded-xl p-6">
+        <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled mb-4">
           Geographic Coverage
         </p>
-        <div className="relative h-48 flex items-center justify-center overflow-hidden rounded-lg bg-[--color-bg-base]">
+        <div className="relative h-48 flex items-center justify-center overflow-hidden rounded-lg bg-bg-base">
           {/* Simplified world map dots */}
           <svg
             viewBox="0 0 800 400"
@@ -78,8 +93,8 @@ export default function NetworkPage() {
           </svg>
 
           <div className="absolute bottom-3 left-3">
-            <span className="text-[11px] text-[--color-text-disabled]">
-              12,847 nodes across 42 countries
+            <span className="text-[11px] text-text-disabled">
+              {stats?.totalNodes?.toLocaleString() || 12847} nodes across 42 countries
             </span>
           </div>
         </div>
