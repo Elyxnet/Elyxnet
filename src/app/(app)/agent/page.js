@@ -92,7 +92,7 @@ export default function AgentPage() {
   return (
     <div className="h-full relative flex flex-col md:flex-row gap-6">
       {/* Left Column: Input & Context */}
-      <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col gap-6 md:sticky md:top-6 self-start md:max-h-[calc(100vh-2rem)]">
+      <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col gap-6 md:sticky md:top-24 self-start md:max-h-[calc(100vh-2rem)]">
         <motion.div
           initial={shouldReduce ? undefined : { opacity: 0, x: -16 }}
           animate={shouldReduce ? undefined : { opacity: 1, x: 0 }}
@@ -103,7 +103,7 @@ export default function AgentPage() {
               <h2 className="text-[20px] font-bold text-text-primary leading-tight tracking-[-0.02em]">
                 Elyxnet Agent
               </h2>
-              <div className="flex items-center gap-2 mt-0.5">
+              <div className="flex items-center gap-2 mt-1">
                 <Badge variant="purple" dot>
                   v1.2.0 Active
                 </Badge>
@@ -208,13 +208,13 @@ export default function AgentPage() {
             animate={shouldReduce ? undefined : { opacity: 1 }}
             className="flex-1 flex flex-col items-center justify-center text-center p-8 border border-dashed border-border-strong rounded-2xl bg-bg-surface/50"
           >
-            <div className="w-16 h-16 rounded-2xl bg-bg-raised flex items-center justify-center mb-4 border border-border-default">
+            {/* <div className="w-16 h-16 rounded-2xl bg-bg-raised flex items-center justify-center mb-4 border border-border-default">
               <RiBrainLine className="w-8 h-8 text-text-disabled" />
-            </div>
+            </div> */}
             <h3 className="text-[16px] font-medium text-text-secondary mb-2">
               Agent Standby
             </h3>
-            <p className="text-[13px] text-text-muted max-w-sm mb-4">
+            <p className="text-[13px] text-balance text-text-muted max-w-sm mb-4">
               Enter a query to initiate distributed data collection and analysis.
             </p>
             {infraMode && (
