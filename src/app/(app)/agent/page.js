@@ -10,6 +10,7 @@ import QueryHistory from "@/components/agent/QueryHistory";
 import Badge from "@/components/ui/Badge";
 import { useAgent } from "@/hooks/useAgent";
 import useSWR from "swr";
+import Toggle from "@/components/ui/Toggle";
 
 function InfraStageCard({ stage, index, shouldReduce }) {
   return (
@@ -134,17 +135,11 @@ export default function AgentPage() {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setInfraMode(!infraMode)}
-                disabled={status === "streaming"}
-                className="transition-all disabled:opacity-40"
-              >
-                {infraMode ? (
-                  <RiToggleFill className="w-8 h-8 text-yellow-400" />
-                ) : (
-                  <RiToggleLine className="w-8 h-8 text-text-disabled" />
-                )}
-              </button>
+              <Toggle 
+                active={infraMode} 
+                onChange={setInfraMode} 
+                disabled={status === "streaming"} 
+              />
             </div>
           </div>
 
