@@ -26,7 +26,7 @@ export default function SuggestionChips({ onSelect }) {
   const shouldReduce = useReducedMotion();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
       {suggestions.map((s, i) => {
         const Icon = s.icon;
         return (

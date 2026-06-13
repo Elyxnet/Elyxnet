@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { RiArrowDownSLine, RiTimeLine } from "react-icons/ri";
+import { motion, useReducedMotion } from "motion/react";
+import { RiTimeLine } from "react-icons/ri";
 
-export default function QueryHistory({ queries = [] }) {
+export default function QueryHistory({ queries = [], onSelect }) {
   const shouldReduce = useReducedMotion();
-  const [expandedId, setExpandedId] = useState(null);
 
   if (queries.length === 0) return null;
 
@@ -17,75 +15,36 @@ export default function QueryHistory({ queries = [] }) {
       </p>
 
       <div className="space-y-2">
-        {queries.map((q, i) => {
-          const isExpanded = expandedId === q.id;
-
-          return (
-            <motion.div
-              key={q.id || i}
-              initial={shouldReduce ? undefined : { opacity: 0, y: 4 }}
-              animate={shouldReduce ? undefined : { opacity: 1, y: 0 }}
-              transition={
-                shouldReduce
-                  ? undefined
-                  : { duration: 0.2, delay: i * 0.04, ease: "easeOut" }
-              }
-              className="bg-bg-surface border border-border-default rounded-xl overflow-hidden"
+        {queries.map((q, i) => (
+          <motion.div
+            key={q.id || i}
+            initial={shouldReduce ? undefined : { opacity: 0, y: 4 }}
+            animate={shouldReduce ? undefined : { opacity: 1, y: 0 }}
+            transition={
+              shouldReduce
+                ? undefined
+                : { duration: 0.2, delay: i * 0.04, ease: "easeOut" }
+            }
+            className="bg-bg-surface border border-border-default rounded-xl overflow-hidden hover:border-border-subtle hover:scale-[1.01] transition-all duration-150"
+          >
+            <button
+              onClick={() => onSelect?.(q)}
+              className="w-full flex items-center justify-between px-4 py-3 text-left bg-transparent"
             >
-              <button
-                onClick={() => setExpandedId(isExpanded ? null : q.id || i)}
-                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-bg-hover transition-colors"
-              >
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <RiTimeLine className="w-3.5 h-3.5 text-text-disabled shrink-0" />
-                  <span className="text-[13px] text-text-secondary truncate">
-                    {q.query}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 shrink-0 ml-2">
-                  <span className="text-[11px] text-text-disabled">
-                    −{q.pointsCost} pts
-                  </span>
-                  <RiArrowDownSLine
-                    className={`w-4 h-4 text-text-disabled transition-transform duration-200 ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
-                  />
-                </div>
-              </button>
-
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-4 pb-4 border-t border-border-default">
-                      <div className="pt-3 text-[13px] text-text-primary leading-relaxed whitespace-pre-wrap">
-                        {q.result || "No result available"}
-                      </div>
-                      <div className="flex items-center gap-3 mt-3 pt-2 border-t border-border-default">
-                        {q.model && (
-                          <span className="text-[11px] text-text-disabled font-mono">
-                            {q.model}
-                          </span>
-                        )}
-                        {q.durationMs && (
-                          <span className="text-[11px] text-text-disabled">
-                            {(q.durationMs / 1000).toFixed(1)}s
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <RiTimeLine className="w-3.5 h-3.5 text-text-disabled shrink-0" />
+                <span className="text-[13px] text-text-secondary truncate">
+                  {q.query}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0 ml-2">
+                <span className="text-[11px] text-text-disabled">
+                  −{q.pointsCost} pts
+                </span>
+              </div>
+            </button>
+          </motion.div>
+        ))}
       </div>
     </div>
   );

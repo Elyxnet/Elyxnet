@@ -71,6 +71,7 @@ export default function AgentPage() {
   const { status, stages, content, duration, error, submitQuery, reset } = useAgent();
   const resultRef = useRef(null);
   const [infraMode, setInfraMode] = useState(false);
+  const [selectedHistory, setSelectedHistory] = useState(null);
 
   const { data: historyData, mutate: refreshHistory } = useSWR("/api/agent/history", (url) => fetch(url).then(r => r.json()));
 
@@ -82,24 +83,22 @@ export default function AgentPage() {
   }, [status, refreshHistory]);
 
   const handleSubmit = (query) => {
+    setSelectedHistory(null);
     submitQuery(query, infraMode);
   };
 
   const pointsCost = infraMode ? 25 : 10;
 
   return (
-    <div className="h-full flex flex-col md:flex-row gap-6">
+    <div className="h-full relative flex flex-col md:flex-row gap-6">
       {/* Left Column: Input & Context */}
-      <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col gap-6">
+      <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col gap-6 md:sticky md:top-6 self-start md:max-h-[calc(100vh-2rem)]">
         <motion.div
           initial={shouldReduce ? undefined : { opacity: 0, x: -16 }}
           animate={shouldReduce ? undefined : { opacity: 1, x: 0 }}
           transition={shouldReduce ? undefined : { duration: 0.3, ease: "easeOut" }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-purple-950 flex items-center justify-center border border-purple-900">
-              <RiBrainLine className="w-5 h-5 text-purple-400" />
-            </div>
             <div>
               <h2 className="text-[20px] font-bold text-text-primary leading-tight tracking-[-0.02em]">
                 Elyxnet Agent
@@ -165,15 +164,45 @@ export default function AgentPage() {
           initial={shouldReduce ? undefined : { opacity: 0, x: -16 }}
           animate={shouldReduce ? undefined : { opacity: 1, x: 0 }}
           transition={shouldReduce ? undefined : { duration: 0.3, delay: 0.1, ease: "easeOut" }}
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto pr-1 pb-4"
         >
-          <QueryHistory queries={historyData?.history || []} />
+          <QueryHistory queries={historyData?.history || []} onSelect={setSelectedHistory} />
         </motion.div>
       </div>
 
       {/* Right Column: Execution & Results */}
       <div className="w-full md:w-[55%] lg:w-[60%] flex flex-col gap-4 min-h-[500px]">
-        {status === "idle" ? (
+        {selectedHistory && status === "idle" ? (
+          <div className="flex flex-col gap-4" ref={resultRef}>
+            <div className="bg-bg-raised border border-border-default rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-text-disabled">
+                  Historic Query Result
+                </p>
+                <Badge variant="purple">Archived</Badge>
+              </div>
+              <p className="text-[14px] font-medium text-text-primary mb-2">"{selectedHistory.query}"</p>
+              <div className="flex items-center justify-between pt-3 mt-3 border-t border-border-default">
+                <span className="text-[11px] text-text-muted">
+                  −{selectedHistory.pointsCost} pts deducted
+                </span>
+                <span className="text-[11px] text-text-disabled">
+                  Completed in {(selectedHistory.durationMs / 1000).toFixed(1)}s
+                </span>
+              </div>
+            </div>
+
+            {/* Render historic result via ResultCard which includes react-markdown */}
+            <ResultCard content={selectedHistory.result} isStreaming={false} />
+
+            <button
+              onClick={() => setSelectedHistory(null)}
+              className="text-xs text-text-muted hover:text-text-primary self-start mt-2 transition-colors"
+            >
+              &larr; Back to Standby
+            </button>
+          </div>
+        ) : status === "idle" ? (
           <motion.div
             initial={shouldReduce ? undefined : { opacity: 0 }}
             animate={shouldReduce ? undefined : { opacity: 1 }}
