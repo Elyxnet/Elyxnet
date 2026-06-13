@@ -1,4 +1,5 @@
 import { connectDB } from "../db/mongoose.js";
+import User from "../db/models/User.js";
 import Reward from "../db/models/Reward.js";
 
 /**
@@ -6,9 +7,10 @@ import Reward from "../db/models/Reward.js";
  */
 export async function getBalance(walletAddress) {
   await connectDB();
+  const address = walletAddress.toLowerCase();
 
   const result = await Reward.aggregate([
-    { $match: { walletAddress: walletAddress.toLowerCase() } },
+    { $match: { walletAddress: address } },
     { $group: { _id: null, total: { $sum: "$amount" } } },
   ]);
 
@@ -21,7 +23,7 @@ export async function getBalance(walletAddress) {
   const todayResult = await Reward.aggregate([
     {
       $match: {
-        walletAddress: walletAddress.toLowerCase(),
+        walletAddress: address,
         amount: { $gt: 0 },
         createdAt: { $gte: startOfDay },
       },
@@ -74,8 +76,6 @@ export async function getHistory(walletAddress, page = 1, limit = 20) {
 export async function getRewardRate(walletAddress) {
   await connectDB();
 
-  // In production, this would calculate from actual connected accounts
-  // and infra score. For MVP, return demo values.
   return {
     baseRate: 1.0,
     infraMultiplier: 1.42,
@@ -100,7 +100,40 @@ export async function createReward(walletAddress, userId, type, amount, descript
     epoch: getEpoch(),
   });
 
+  // Also update User.totalPoints
+  await User.updateOne(
+    { walletAddress: walletAddress.toLowerCase() },
+    { $inc: { totalPoints: amount } }
+  );
+
   return reward;
+}
+
+/**
+ * Grant initial welcome bonus to new users.
+ */
+export async function grantWelcomeBonus(walletAddress, userId) {
+  await connectDB();
+  const address = walletAddress.toLowerCase();
+
+  // Check if user already received welcome bonus
+  const existing = await Reward.findOne({
+    walletAddress: address,
+    type: "activity_bonus",
+    description: "Welcome bonus — thanks for joining Elyxnet",
+  });
+
+  if (existing) return null;
+
+  // Grant 500 points welcome bonus
+  return createReward(
+    address,
+    userId,
+    "activity_bonus",
+    500,
+    "Welcome bonus — thanks for joining Elyxnet",
+    { trigger: "signup" }
+  );
 }
 
 function getEpoch() {

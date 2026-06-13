@@ -9,6 +9,7 @@ import {
   RiCoinLine,
   RiGlobalLine,
   RiSettings3Line,
+  RiUser3Line,
 } from "react-icons/ri";
 import Badge from "@/components/ui/Badge";
 import Toggle from "@/components/ui/Toggle";
@@ -24,6 +25,7 @@ const navLinks = [
   },
   { href: "/rewards", label: "Rewards", icon: RiCoinLine },
   { href: "/network", label: "Network", icon: RiGlobalLine },
+  { href: "/profile", label: "Profile", icon: RiUser3Line },
 ];
 
 export default function Sidebar({ wallet, infraActive, onInfraToggle }) {

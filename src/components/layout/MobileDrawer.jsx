@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { RiCloseLine, RiDashboardLine, RiServerLine, RiRobot2Line, RiCoinLine, RiGlobalLine } from "react-icons/ri";
+import { RiCloseLine, RiDashboardLine, RiServerLine, RiRobot2Line, RiCoinLine, RiGlobalLine, RiUser3Line } from "react-icons/ri";
 import Toggle from "@/components/ui/Toggle";
 
 const navLinks = [
@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/agent", label: "AI Agent", icon: RiRobot2Line, accent: true },
   { href: "/rewards", label: "Rewards", icon: RiCoinLine },
   { href: "/network", label: "Network", icon: RiGlobalLine },
+  { href: "/profile", label: "Profile", icon: RiUser3Line },
 ];
 
 export default function MobileDrawer({ open, onClose, wallet, infraActive, onInfraToggle }) {

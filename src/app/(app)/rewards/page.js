@@ -239,6 +239,25 @@ export default function RewardsPage() {
         </div>
       </div>
 
+      {/* How you earn */}
+      <div className="bg-bg-surface border border-border-default rounded-2xl p-5 mb-6">
+        <h3 className="text-base font-semibold text-text-primary mb-4">How You Earn Points</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { label: "Platform Linking", pts: "+100", desc: "Per platform linked", color: "text-blue-400" },
+            { label: "Infrastructure Uptime", pts: "+50/day", desc: "While infra mode is active", color: "text-green-400" },
+            { label: "Welcome Bonus", pts: "+500", desc: "One-time signup reward", color: "text-yellow-400" },
+            { label: "AI Query Spend", pts: "−10/25", desc: "Standard / Infra mode", color: "text-purple-400" },
+          ].map((item) => (
+            <div key={item.label} className="p-3 rounded-xl bg-bg-base border border-border-default text-center">
+              <p className={`text-lg font-bold ${item.color}`}>{item.pts}</p>
+              <p className="text-xs font-semibold text-text-primary mt-1">{item.label}</p>
+              <p className="text-[10px] text-text-muted mt-0.5">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Two-column: Feed + Rate Panel */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RewardFeed rewards={historyData?.rewards || []} />

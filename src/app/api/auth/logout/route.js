@@ -1,11 +1,12 @@
-import { clearSessionCookie } from "@/lib/middleware/withAuth";
+import { cookies } from "next/headers";
 
 export async function POST() {
   try {
-    await clearSessionCookie();
+    const cookieStore = await cookies();
+    cookieStore.delete("elyxnet_session");
     return Response.json({ success: true });
   } catch (err) {
     console.error("Logout error:", err);
-    return Response.json({ error: "Logout failed" }, { status: 500 });
+    return Response.json({ error: "Failed to logout" }, { status: 500 });
   }
 }

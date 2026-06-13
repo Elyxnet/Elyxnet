@@ -3,6 +3,7 @@ import {
   createSessionToken,
   setSessionCookie,
 } from "@/lib/middleware/withAuth";
+import { grantWelcomeBonus } from "@/lib/services/rewards.service";
 
 export async function POST(req) {
   try {
@@ -16,6 +17,9 @@ export async function POST(req) {
     }
 
     const user = await verifySignature(walletAddress, signature, nonce);
+
+    // Grant welcome bonus for new users (idempotent — skips if already granted)
+    await grantWelcomeBonus(user.walletAddress, user.userId);
 
     const token = await createSessionToken(user.walletAddress, user.userId);
     await setSessionCookie(token);
