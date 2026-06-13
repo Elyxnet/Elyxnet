@@ -1,108 +1,278 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { RiArrowRightLine, RiRobot2Line } from "react-icons/ri";
+import { 
+  RiArrowRightLine, 
+  RiRobot2Line, 
+  RiTerminalBoxLine, 
+  RiCpuLine,
+  RiTwitterXFill,
+  RiDiscordFill,
+  RiTelegramFill,
+  RiYoutubeFill,
+  RiRedditFill,
+  RiLinkedinFill
+} from "react-icons/ri";
 
+// ==========================================
+// 1. Premium ASCII Wave Canvas Background
+// ==========================================
+function AsciiWaveBackground() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    let animationFrameId;
+    let time = 0;
+
+    // The density of characters from lightest to heaviest
+    const chars = [" ", ".", "-", "+", "=", "%", "@", "#"];
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", resize);
+    resize();
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const spacing = 16; // Grid spacing
+      const rows = Math.ceil(canvas.height / spacing);
+      const cols = Math.ceil(canvas.width / spacing);
+
+      ctx.font = "12px monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // Create a fluid ASCII landscape effect using overlapping sine waves
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const px = x * spacing;
+          const py = y * spacing;
+          
+          // Complex math to simulate topological contour lines
+          const wave1 = Math.sin(x * 0.06 + time * 0.001);
+          const wave2 = Math.cos(y * 0.05 + time * 0.0008);
+          // Add a diagonal drift to make it feel alive
+          const wave3 = Math.sin((x + y) * 0.03 - time * 0.0015);
+          
+          const z = (wave1 + wave2 + wave3) / 3; // Value roughly between -1 and 1
+          
+          // Normalize z to 0 -> 1
+          const normalizedZ = (z + 1) / 2;
+          
+          // Map to character index
+          const charIndex = Math.floor(normalizedZ * chars.length);
+          const safeIndex = Math.max(0, Math.min(charIndex, chars.length - 1));
+          const char = chars[safeIndex];
+
+          if (char !== " ") {
+            // Yellow theme mapping: Brighter yellow for denser characters
+            // Opacity is tied to the elevation (z)
+            const opacity = Math.max(0.05, normalizedZ * 0.6);
+            
+            // Core yellow theme: rgba(234, 179, 8) is Tailwind's yellow-500
+            ctx.fillStyle = `rgba(234, 179, 8, ${opacity})`;
+            ctx.fillText(char, px, py);
+          }
+        }
+      }
+      
+      // Radial gradient to fade out edges perfectly into the dark background
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2, 0, 0,
+        canvas.width / 2, canvas.height / 2, canvas.width / 1.2
+      );
+      gradient.addColorStop(0, "rgba(5, 5, 5, 0)");
+      gradient.addColorStop(1, "rgba(5, 5, 5, 1)");
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      time += 16;
+      animationFrameId = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => {
+      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 z-0 pointer-events-none opacity-60"
+      style={{ background: "#050505" }}
+    />
+  );
+}
+
+// ==========================================
+// 2. Main Hero Section
+// ==========================================
 export default function HeroSection() {
   const shouldReduce = useReducedMotion();
 
-  const anim = (delay, y = 16) =>
+  const anim = (delay, y = 20) =>
     shouldReduce
       ? {}
       : {
-          initial: { opacity: 0, y },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, margin: "-50px" },
-          transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] },
+          initial: { opacity: 0, y, filter: "blur(8px)" },
+          animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+          transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] },
         };
 
   return (
-    <section className="relative z-10 pt-40 pb-20 px-6 max-w-6xl mx-auto flex flex-col items-center text-center">
-      <motion.div {...anim(0)} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-950/30 border border-yellow-border mb-8">
-        <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-        <span className="text-xs font-medium text-yellow-400 tracking-wide">
-          Elyxnet V1 — The Distributed Intelligence Engine
-        </span>
-      </motion.div>
+    <section className="relative min-h-screen bg-[#050505] overflow-hidden flex flex-col items-center pt-32 pb-20 selection:bg-yellow-400/30 selection:text-yellow-200">
+      <AsciiWaveBackground />
 
-      <motion.h1 {...anim(0.1)} className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-[-0.04em] leading-[1.05] mb-6 max-w-4xl text-text-primary">
-        Complete AI <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-text-muted">
-          Infrastructure.
-        </span>
-      </motion.h1>
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col items-center text-center">
+        
+        {/* Title */}
+        <motion.h1 {...anim(0.1)} className="text-5xl sm:text-6xl md:text-[80px] font-medium tracking-tight text-white leading-[1.05] mb-6 max-w-4xl drop-shadow-sm">
+          Complete AI <br className="hidden md:block" />
+          Infrastructure
+        </motion.h1>
 
-      <motion.p {...anim(0.2)} className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed">
-        More than just an agent. Elyxnet is a comprehensive, decentralized network that transforms your idle social accounts into globally distributed AI compute nodes.
-      </motion.p>
+        {/* Subtitle */}
+        <motion.p {...anim(0.2)} className="text-lg md:text-[20px] text-gray-400 max-w-[680px] mx-auto mb-10 leading-relaxed font-normal">
+          More than just an agent. Elyxnet is a comprehensive, decentralized network that transforms your idle social accounts into globally distributed AI compute nodes.
+        </motion.p>
 
-      <motion.div {...anim(0.3)} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <Link href="/connect" className="w-full sm:w-auto h-12 px-8 bg-yellow-400 text-bg-base rounded-xl text-[15px] font-bold flex items-center justify-center gap-2 hover:bg-yellow-200 transition-colors shadow-[0_0_24px_rgba(230,185,60,0.2)]">
-          Connect Wallet
-          <RiArrowRightLine className="w-4 h-4" />
-        </Link>
-        <Link href="/network" className="w-full sm:w-auto h-12 px-8 bg-transparent text-text-primary border border-border-strong rounded-xl text-[15px] font-medium flex items-center justify-center gap-2 hover:bg-bg-hover transition-colors">
-          View Live Network
-        </Link>
-      </motion.div>
+        {/* Buttons */}
+        <motion.div {...anim(0.3)} className="flex flex-row items-center gap-4 w-full justify-center">
+          <Link href="/connect" className="h-11 px-6 bg-yellow-400 text-black rounded-md text-[14px] font-bold flex items-center justify-center hover:bg-yellow-300 transition-colors shadow-[0_0_24px_rgba(234,179,8,0.3)]">
+            Connect Platforms
+          </Link>
+          <Link href="/network" className="h-11 px-6 bg-[#111] text-white border border-white/10 rounded-md text-[14px] font-medium flex items-center justify-center hover:bg-[#1a1a1a] transition-colors hover:border-white/20">
+            View Live Network
+          </Link>
+        </motion.div>
 
-      {/* Hero Code Snippet / Mockup */}
-      <motion.div {...anim(0.5, 40)} className="mt-20 w-full max-w-5xl mx-auto relative group text-left">
-        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-b from-border-strong to-transparent opacity-20 blur-sm group-hover:opacity-30 transition-opacity duration-500" />
-        <div className="relative rounded-2xl border border-border-default bg-bg-raised overflow-hidden shadow-2xl flex flex-col md:flex-row">
+        {/* App Mockup Window (Yellow Theme) */}
+        <motion.div {...anim(0.5)} className="mt-20 w-full max-w-[1000px] mx-auto relative group text-left">
+          {/* Glowing ambient shadow behind mockup */}
+          <div className="absolute -inset-4 bg-gradient-to-b from-yellow-500/10 to-transparent opacity-30 blur-3xl rounded-[32px] pointer-events-none" />
           
-          {/* Left: Code Editor */}
-          <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-border-default bg-[#0d0d0d]">
-            <div className="h-12 border-b border-[#1c1c1e] flex items-center px-4 gap-2">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-                <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-                <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+          <div className="relative rounded-2xl border border-white/10 bg-[#0A0A0A] shadow-2xl overflow-hidden flex flex-col">
+            
+            {/* macOS Window Header */}
+            <div className="h-12 border-b border-white/5 flex items-center justify-between px-4 bg-[#0F0F0F]">
+              <div className="flex gap-2 w-20">
+                <div className="w-3 h-3 rounded-full bg-white/20" />
+                <div className="w-3 h-3 rounded-full bg-white/20" />
+                <div className="w-3 h-3 rounded-full bg-white/20" />
               </div>
-              <div className="ml-4 px-3 py-1 rounded bg-[#1c1c1e] text-[11px] text-[#888] font-mono">
-                Agent.js
-              </div>
+              <p className="text-[12px] font-medium text-gray-400">Elyxnet Workspace</p>
+              <div className="w-20" />
             </div>
-            <div className="p-6 font-mono text-[13px] leading-loose overflow-x-auto">
-              <span className="text-[#c678dd]">import</span> {"{ ElyxnetAgent }"} <span className="text-[#c678dd]">from</span> <span className="text-[#98c379]">'@elyxnet/sdk'</span>;<br/><br/>
-              <span className="text-[#c678dd]">const</span> agent = <span className="text-[#c678dd]">new</span> <span className="text-[#e5c07b]">ElyxnetAgent</span>({"{"}<br/>
-              &nbsp;&nbsp;network: <span className="text-[#98c379]">'mainnet'</span>,<br/>
-              &nbsp;&nbsp;nodes: <span className="text-[#d19a66]">12847</span>,<br/>
-              {"}"});<br/><br/>
-              <span className="text-[#c678dd]">const</span> result = <span className="text-[#c678dd]">await</span> agent.<span className="text-[#61afef]">query</span>(<br/>
-              &nbsp;&nbsp;<span className="text-[#98c379]">'Analyze BTC sentiment across X'</span><br/>
-              );<br/><br/>
-              <span className="text-[#5c6370]">// Automatically routed through 800+</span><br/>
-              <span className="text-[#5c6370]">// decentralized infrastructure nodes</span>
-            </div>
-          </div>
 
-          {/* Right: UI Preview */}
-          <div className="w-full md:w-1/2 bg-bg-surface p-6 flex flex-col justify-center">
-             <div className="space-y-4">
-               <div className="flex items-center justify-between p-4 rounded-xl border border-border-default bg-bg-base">
-                 <div className="flex items-center gap-3">
-                   <div className="w-8 h-8 rounded-full bg-purple-950 flex items-center justify-center">
-                     <RiRobot2Line className="text-purple-400 w-4 h-4" />
-                   </div>
-                   <div>
-                     <p className="text-[13px] font-medium text-text-primary">Agent Executing</p>
-                     <p className="text-[11px] text-text-muted">Aggregating from 847 nodes</p>
-                   </div>
-                 </div>
-                 <span className="text-[12px] text-purple-400 font-mono">Streaming...</span>
-               </div>
-               
-               <div className="p-4 rounded-xl border border-border-default bg-bg-base space-y-3">
-                 <div className="h-2 w-full bg-border-strong rounded" />
-                 <div className="h-2 w-[80%] bg-border-strong rounded" />
-                 <div className="h-2 w-[90%] bg-border-strong rounded" />
-               </div>
-             </div>
+            {/* Split View UI */}
+            <div className="flex flex-col md:flex-row h-auto md:h-[400px]">
+              
+              {/* Left sidebar / Code block (Updated syntax colors to warm/yellow tones) */}
+              <div className="w-full md:w-[45%] border-r border-white/5 bg-[#0A0A0A] p-6 flex flex-col justify-center">
+                <div className="font-mono text-[13px] leading-[1.8] text-gray-400">
+                  <span className="text-orange-400">import</span> {"{ ElyxnetAgent }"} <span className="text-orange-400">from</span> <span className="text-yellow-400">'@elyxnet/sdk'</span>;<br/><br/>
+                  <span className="text-orange-400">const</span> agent = <span className="text-orange-400">new</span> <span className="text-white">ElyxnetAgent</span>({"{"}<br/>
+                  &nbsp;&nbsp;network: <span className="text-yellow-400">'mainnet'</span>,<br/>
+                  &nbsp;&nbsp;nodes: <span className="text-amber-200">12847</span>,<br/>
+                  {"}"});<br/><br/>
+                  <span className="text-orange-400">const</span> result = <span className="text-orange-400">await</span> agent.<span className="text-white">query</span>(<br/>
+                  &nbsp;&nbsp;<span className="text-yellow-400">'Analyze network sentiment'</span><br/>
+                  );
+                </div>
+              </div>
+
+              {/* Right Data Preview */}
+              <div className="w-full md:w-[55%] bg-[#050505] p-8 flex flex-col justify-center gap-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center gap-2 mb-2 text-gray-500">
+                      <RiCpuLine size={16} /> <span className="text-[11px] uppercase tracking-wider font-semibold">Active Nodes</span>
+                    </div>
+                    <p className="text-3xl font-medium text-white tracking-tight">12,847 <span className="text-sm text-yellow-500 font-normal">↑ 14.2%</span></p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center gap-2 mb-2 text-gray-500">
+                      <RiTerminalBoxLine size={16} /> <span className="text-[11px] uppercase tracking-wider font-semibold">Avg Response</span>
+                    </div>
+                    <p className="text-3xl font-medium text-white tracking-tight">1.2s <span className="text-sm text-yellow-400 font-normal">Optimal</span></p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-4 rounded-xl border border-yellow-500/10 bg-yellow-500/5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full border border-yellow-400/30 bg-yellow-400/10 flex items-center justify-center">
+                      <RiRobot2Line className="text-yellow-400 w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[14px] font-medium text-white">Agent Executing...</p>
+                      <p className="text-[12px] text-gray-400">Aggregating distributed compute</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
+                    <span className="text-[12px] text-yellow-400 font-mono">Live</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+
+        {/* Crosshair Branded Logo Ticker (Real Social Platforms) */}
+        <motion.div {...anim(0.6)} className="mt-24 w-full max-w-[1000px] mx-auto relative group">
+          {/* Border lines with Crosshairs (+) */}
+          <div className="absolute left-0 top-[-4px] text-white/20 text-xs">+</div>
+          <div className="absolute right-0 top-[-4px] text-white/20 text-xs">+</div>
+          <div className="absolute left-0 bottom-[-4px] text-white/20 text-xs">+</div>
+          <div className="absolute right-0 bottom-[-4px] text-white/20 text-xs">+</div>
+          
+          <div className="border-y border-white/5 py-8 flex flex-col md:flex-row items-center justify-between px-6 gap-6 md:gap-0">
+            <p className="text-[12px] text-gray-500 font-medium uppercase tracking-widest">Supported Platforms</p>
+            
+            <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500">
+              
+              <div className="flex items-center gap-2 text-white hover:text-white transition-colors cursor-pointer">
+                <RiTwitterXFill size={20} />
+                <span className="font-semibold text-sm tracking-tight hidden sm:block">X (Twitter)</span>
+              </div>
+              
+              <div className="flex items-center gap-2 text-white hover:text-[#5865F2] transition-colors cursor-pointer">
+                <RiDiscordFill size={22} />
+                <span className="font-semibold text-sm tracking-tight hidden sm:block">Discord</span>
+              </div>
+              
+              <div className="flex items-center gap-2 text-white hover:text-[#229ED9] transition-colors cursor-pointer">
+                <RiTelegramFill size={22} />
+                <span className="font-semibold text-sm tracking-tight hidden sm:block">Telegram</span>
+              </div>
+              
+              <div className="flex items-center gap-2 text-white hover:text-[#FF0000] transition-colors cursor-pointer">
+                <RiYoutubeFill size={24} />
+                <span className="font-semibold text-sm tracking-tight hidden sm:block">YouTube</span>
+              </div>
+              
+              <div className="flex items-center gap-2 text-white hover:text-[#FF4500] transition-colors cursor-pointer">
+                <RiRedditFill size={24} />
+                <span className="font-semibold text-sm tracking-tight hidden sm:block">Reddit</span>
+              </div>
+            </div>
+
+            <p className="text-[12px] text-gray-500 font-medium hidden md:block uppercase tracking-widest">Connect to earn</p>
+          </div>
+        </motion.div>
+
+      </div>
     </section>
   );
 }
