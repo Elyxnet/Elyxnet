@@ -232,19 +232,19 @@ export default function HeroSection() {
         {/* Crosshair Branded Logo Ticker (Real Social Platforms) */}
         <motion.div {...anim(0.6)} className="mt-24 w-full max-w-[1000px] mx-auto relative group">
           {/* Border lines with Crosshairs (+) */}
-          <div className="absolute left-0 top-[-4px] text-white/20 text-xs">+</div>
-          <div className="absolute right-0 top-[-4px] text-white/20 text-xs">+</div>
-          <div className="absolute left-0 bottom-[-4px] text-white/20 text-xs">+</div>
-          <div className="absolute right-0 bottom-[-4px] text-white/20 text-xs">+</div>
+          <div className="absolute -left-1 top-[-10px] text-yellow-500 text-sm">+</div>
+          <div className="absolute -right-1 top-[-10px] text-yellow-500 text-sm">+</div>
+          <div className="absolute -left-1 bottom-[-10px] text-yellow-500 text-sm">+</div>
+          <div className="absolute -right-1 bottom-[-10px] text-yellow-500 text-sm">+</div>
           
-          <div className="border-y border-white/5 py-8 flex flex-col md:flex-row items-center justify-between px-6 gap-6 md:gap-0">
+          <div className="border border-white/5 py-8 flex flex-col md:flex-row items-center justify-between px-6 gap-6 md:gap-0">
             <p className="text-[12px] text-gray-500 font-medium uppercase tracking-widest">Supported Platforms</p>
             
             <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500">
               
               <div className="flex items-center gap-2 text-white hover:text-white transition-colors cursor-pointer">
                 <RiTwitterXFill size={20} />
-                <span className="font-semibold text-sm tracking-tight hidden sm:block">X (Twitter)</span>
+                <span className="font-semibold text-sm tracking-tight hidden sm:block">X</span>
               </div>
               
               <div className="flex items-center gap-2 text-white hover:text-[#5865F2] transition-colors cursor-pointer">
