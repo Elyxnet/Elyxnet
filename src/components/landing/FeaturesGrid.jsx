@@ -35,7 +35,7 @@ export default function FeaturesGrid() {
       {/* Subdued ambient background lighting (No harsh shadows) */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-yellow-500-[0.02] blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="max-w-[1200px] mx-auto relative z-10">
+      <div className="max-w-[1400px] mx-auto relative z-10">
         
         {/* Header Section */}
         <motion.div {...anim(0)} className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -59,7 +59,7 @@ export default function FeaturesGrid() {
           {/* 1. Infrastructure Mode (Tall Card - Col 1, Row 1 & 2) */}
           <motion.div 
             {...anim(0.1)} 
-            className="group md:col-span-1 md:row-span-2 relative rounded-[32px] bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col hover:border-white/[0.08] transition-colors duration-700"
+            className="group md:col-span-1 md:row-span-2 relative rounded-2xl bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col hover:border-white/[0.08] transition-colors duration-700"
           >
             {/* Visual Arena */}
             <div className="relative flex-1 bg-[#080808] border-b border-white/[0.02] overflow-hidden p-8 flex flex-col items-center justify-center min-h-[300px]">
@@ -97,7 +97,7 @@ export default function FeaturesGrid() {
           {/* 2. Flagship AI Agent (Wide Top Card - Col 2 & 3, Row 1) */}
           <motion.div 
             {...anim(0.2)} 
-            className="group md:col-span-2 md:row-span-1 relative rounded-[32px] bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col md:flex-row hover:border-white/[0.08] transition-colors duration-700"
+            className="group md:col-span-2 md:row-span-1 relative rounded-2xl bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col md:flex-row hover:border-white/[0.08] transition-colors duration-700"
           >
             <div className="p-8 md:p-10 md:w-[45%] shrink-0 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-4">
@@ -142,7 +142,7 @@ export default function FeaturesGrid() {
           {/* 3. Append-only Ledger (Square Card - Col 2, Row 2) */}
           <motion.div 
             {...anim(0.3)} 
-            className="group md:col-span-1 md:row-span-1 relative rounded-[32px] bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col hover:border-white/[0.08] transition-colors duration-700"
+            className="group md:col-span-1 md:row-span-1 relative rounded-2xl bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col hover:border-white/[0.08] transition-colors duration-700"
           >
             <div className="relative h-[160px] w-full bg-[#080808] border-b border-white/[0.02] overflow-hidden p-6 flex flex-col justify-center">
               {/* Soft vertical fade mask */}
@@ -177,7 +177,7 @@ export default function FeaturesGrid() {
           {/* 4. Bank-grade Security (Square Card - Col 3, Row 2) */}
           <motion.div 
             {...anim(0.4)} 
-            className="group md:col-span-1 md:row-span-1 relative rounded-[32px] bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col hover:border-white/[0.08] transition-colors duration-700"
+            className="group md:col-span-1 md:row-span-1 relative rounded-2xl bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col hover:border-white/[0.08] transition-colors duration-700"
           >
             <div className="relative h-[160px] w-full bg-[#080808] border-b border-white/[0.02] overflow-hidden flex items-center justify-center">
                <div className="relative w-24 h-24 rounded-full border border-white/[0.04] flex items-center justify-center bg-[#050505]">
@@ -203,7 +203,7 @@ export default function FeaturesGrid() {
           {/* 5. Global Consensus (Full Width Bottom Card - Col 1, 2 & 3, Row 3) */}
           <motion.div 
             {...anim(0.5)} 
-            className="group md:col-span-3 md:row-span-1 relative rounded-[32px] bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col md:flex-row items-center hover:border-white/[0.08] transition-colors duration-700 min-h-[280px]"
+            className="group md:col-span-3 md:row-span-1 relative rounded-2xl bg-[#0A0A0A] border border-white/[0.04] overflow-hidden flex flex-col md:flex-row items-center hover:border-white/[0.08] transition-colors duration-700 min-h-[280px]"
           >
             <div className="p-8 md:p-10 md:w-[40%] shrink-0">
               <div className="flex items-center gap-3 mb-4">
