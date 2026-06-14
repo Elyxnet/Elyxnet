@@ -127,7 +127,7 @@ function AsciiVisual({ variant = "sphere" }) {
 // 2. Main Component
 // ==========================================
 const steps = [
-  {
+  { 
     number: "01",
     shape: "sphere",
     title: "Connect your wallet",
