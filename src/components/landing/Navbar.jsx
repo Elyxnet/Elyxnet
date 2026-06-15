@@ -64,7 +64,7 @@ export default function Navbar() {
             Network
           </Link>
           <Link href="/dashboard" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
-            AI Agent
+            Dashboard
           </Link>
         </div>
 
