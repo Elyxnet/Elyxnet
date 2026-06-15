@@ -136,7 +136,7 @@ export default function CtaSection() {
           
           {/* Secondary Outline Button */}
           <Link 
-            href="/network" 
+            href="/networks" 
             className="w-full sm:w-auto h-10 px-8 bg-transparent text-white border border-white/10 rounded-lg text-[14px] font-medium flex items-center justify-center hover:bg-white/[0.04] transition-colors"
           >
             View Live Network

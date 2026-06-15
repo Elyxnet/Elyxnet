@@ -115,20 +115,15 @@ export default function NetworksPublicPage() {
       <Navbar />
       
       <main className="pt-32 pb-24 px-4 sm:px-6 relative z-10 max-w-[1400px] mx-auto">
-        
-        {/* Page Header */}
         <motion.div 
-          initial={shouldReduce ? undefined : { opacity: 0, y: 20 }}
+        initial={shouldReduce ? undefined : { opacity: 0, y: 20 }}
           animate={shouldReduce ? undefined : { opacity: 1, y: 0 }}
           transition={shouldReduce ? undefined : { duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center max-w-3xl mx-auto mb-20"
-        >
-          <Badge variant="yellow" className="mb-6">Public Explorer</Badge>
-          <h1 className="text-5xl sm:text-6xl md:text-[72px] font-medium tracking-tight text-white leading-[1.05] mb-6">
-            Elyxnet <br className="hidden md:block" />
-            <span className="text-white/40">Global Traffic.</span>
-          </h1>
-          <p className="text-lg md:text-[20px] text-white/50 leading-relaxed font-normal">
+        className="mt-24 mb-14 max-w-4xl">
+          <h2 className="text-4xl md:text-[56px] font-medium tracking-tight text-text-primary leading-[1.05] mb-4">
+           Elyxnet Global Traffic
+          </h2>
+          <p className="text-text-secondary text-lg md:text-[20px] leading-relaxed max-w-2xl font-normal">
             Real-time monitoring of our decentralized AI infrastructure, node health, geographic coverage, and top performing operators.
           </p>
         </motion.div>

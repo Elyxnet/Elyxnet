@@ -152,7 +152,7 @@ export default function HeroSection() {
           <Link href="/connect" className="cta scale-110">
             Connect Platforms
           </Link>
-          <Link href="/network" className="h-10 px-6 bg-[#111] text-white border border-white/10 rounded-md text-[14px] font-medium flex items-center justify-center hover:bg-[#1a1a1a] transition-colors hover:border-white/20">
+          <Link href="/networks" className="h-10 px-6 bg-[#111] text-white border border-white/10 rounded-md text-[14px] font-medium flex items-center justify-center hover:bg-[#1a1a1a] transition-colors hover:border-white/20">
             View Live Network
           </Link>
         </motion.div>
