@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 
 export default function Footer() {
   const shouldReduce = useReducedMotion();
@@ -24,10 +25,12 @@ export default function Footer() {
           {/* Brand Column */}
           <motion.div {...anim(0)} className="col-span-2 md:col-span-2 pr-8">
             <Link href="/" className="flex items-center gap-3 mb-6 group w-fit">
-              <div className="w-5 h-5 rounded-sm bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-[0_0_12px_rgba(234,179,8,0.3)] group-hover:shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-shadow duration-500" />
-              <span className="text-white/90 font-medium text-xl tracking-tight">
-                Elyxnet
-              </span>
+              <Image 
+                src="/logo.png"
+                alt="Elyxnet Logo"
+                width={150}
+                height={100}
+              />
             </Link>
             <p className="text-[14px] text-white/40 leading-relaxed max-w-xs font-normal">
               The premium decentralized intelligence engine. Deploy, monetize, and scale global AI infrastructure.
