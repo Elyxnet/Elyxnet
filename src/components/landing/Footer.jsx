@@ -47,7 +47,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/network" className="text-[14px] text-white/40 hover:text-white hover:translate-x-1 inline-block transition-all duration-300">
+                <Link href="/networks" className="text-[14px] text-white/40 hover:text-white hover:translate-x-1 inline-block transition-all duration-300">
                   Network Stats
                 </Link>
               </li>

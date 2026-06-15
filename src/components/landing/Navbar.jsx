@@ -57,15 +57,15 @@ export default function Navbar() {
 
         {/* Center Links (Floating Pill Style) */}
         <div className="hidden md:flex items-center gap-8 px-8 py-2.5 rounded-full bg-white/[0.02] border border-white/[0.04] backdrop-blur-md">
-          <a href="#features" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
-            Features
-          </a>
-          <a href="#network" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
+          <Link href="/" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
+            Home
+          </Link>
+          <Link href="/networks" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
             Network
-          </a>
-          <a href="#agent" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
+          </Link>
+          <Link href="/dashboard" className="text-[13px] font-medium text-white/50 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all duration-300">
             AI Agent
-          </a>
+          </Link>
         </div>
 
         {/* Auth Actions */}
