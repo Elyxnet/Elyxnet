@@ -150,11 +150,11 @@ export default function StatsBanner() {
         
         {/* Left Side: Content & Canvas */}
         <motion.div {...anim(0)} className="flex flex-col">
-          <h2 className="text-4xl md:text-[52px] font-medium tracking-tight text-white/90 leading-[1.1] mb-6">
+          <h2 className="text-4xl md:text-[52px] font-medium tracking-tight text-text-primary leading-[1.1] mb-6">
             Real outcomes from <br />
-            teams running <span className="text-white font-semibold">Elyxnet</span>
+            teams running <span className="text-text-primary font-semibold">Elyxnet</span>
           </h2>
-          <p className="text-white/40 text-[15px] leading-relaxed max-w-md">
+          <p className="text-text-secondary text-[15px] leading-relaxed max-w-md">
             From faster data aggregation to a massive decentralized compute layer, operators cut the noise and scale intelligence the moment their node goes live.
           </p>
           

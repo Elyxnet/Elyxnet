@@ -1,6 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { useMemo, useState, useEffect } from "react";
+import DottedMap from "dotted-map";
 import { 
   RiFlashlightLine, 
   RiRobot2Line, 
@@ -15,6 +17,50 @@ import {
 
 export default function FeaturesGrid() {
   const shouldReduce = useReducedMotion();
+
+  const [activePins, setActivePins] = useState([
+    { lat: 40.7128, lng: -74.0060, id: 0 }, // NYC
+    { lat: 51.5074, lng: -0.1278, id: 1 }, // London
+    { lat: 35.6762, lng: 139.6503, id: 2 }, // Tokyo
+    { lat: 1.3521, lng: 103.8198, id: 3 }, // Singapore
+    { lat: -33.8688, lng: 151.2093, id: 4 }, // Sydney
+    { lat: 48.8566, lng: 2.3522, id: 5 }, // Paris
+    { lat: 50.1109, lng: 8.6821, id: 6 }, // Frankfurt
+    { lat: 37.7749, lng: -122.4194, id: 7 }, // SF
+    { lat: -23.5505, lng: -46.6333, id: 8 }, // Sao Paulo
+    { lat: 19.0760, lng: 72.8777, id: 9 }, // Mumbai
+    { lat: 25.2048, lng: 55.2708, id: 10 }, // Dubai
+    { lat: 43.6532, lng: -79.3832, id: 11 }, // Toronto
+    { lat: 55.7558, lng: 37.6173, id: 12 }, // Moscow
+    { lat: 14.5995, lng: 120.9842, id: 13 }, // Manila
+  ]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActivePins(prev => prev.map(pin => ({
+        ...pin,
+        lat: pin.lat + (Math.random() * 6 - 3),
+        lng: pin.lng + (Math.random() * 6 - 3)
+      })));
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const { basePoints, width, height } = useMemo(() => {
+    const map = new DottedMap({ height: 50, grid: "diagonal" });
+    return {
+      basePoints: map.getPoints(),
+      width: map.width,
+      height: map.height
+    };
+  }, []);
+
+  const pinData = useMemo(() => {
+    const map = new DottedMap({ height: 50, grid: "diagonal" });
+    activePins.forEach(pin => map.addPin({ lat: pin.lat, lng: pin.lng, data: pin.id }));
+    return map.pins;
+  }, [activePins]);
 
   // Ultra-smooth easing curve used by Apple/Linear
   const customEase = [0.16, 1, 0.3, 1];
@@ -40,12 +86,12 @@ export default function FeaturesGrid() {
         {/* Header Section */}
         <motion.div {...anim(0)} className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-[56px] font-medium tracking-tight text-white/90 leading-[1.05]">
+            <h2 className="text-4xl md:text-[56px] font-medium tracking-tight text-text-primary leading-[1.05]">
               A comprehensive toolkit <br className="hidden md:block" />
-              <span className="text-white/40">for decentralized AI.</span>
+              <span className="text-text-primary">for decentralized AI</span>
             </h2>
           </div>
-          <p className="text-white/50 text-[15px] max-w-sm leading-relaxed">
+          <p className="text-text-secondary text-[15px] max-w-sm leading-relaxed">
             Everything you need to deploy, monetize, and scale decentralized intelligence across a global network.
           </p>
         </motion.div>
@@ -216,28 +262,33 @@ export default function FeaturesGrid() {
             </div>
             
             {/* Visual Area - Ultra Minimal Map */}
-            <div className="relative w-full h-64 md:h-full flex-1 overflow-hidden bg-[#080808] border-t md:border-t-0 md:border-l border-white/[0.02]">
-              {/* Very faint, clean dot pattern */}
-              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.2)_1px,transparent_1px)] bg-[size:12px_12px] mask-image-[radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
+            <div className="relative w-full h-64 md:h-full flex-1 flex items-center justify-center overflow-hidden bg-[#080808] border-t md:border-t-0 md:border-l border-white/[0.02]">
+              <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full opacity-70" style={{ transform: 'scale(1.15) translateY(10%)' }}>
+                {/* Base map points */}
+                {basePoints.map((p, i) => (
+                  <circle key={`dot-${i}`} cx={p.x} cy={p.y} r={0.35} fill="currentColor" className="text-white/[0.15]" />
+                ))}
+                
+                {/* Active nodes */}
+                {pinData.map((p, i) => (
+                  <motion.g 
+                    key={`pin-${p.data}`} 
+                    animate={{ x: p.x, y: p.y }} 
+                    transition={{ duration: 4, ease: "easeInOut" }}
+                  >
+                    <circle cx={0} cy={0} r={0.7} fill="#E6B93C" className="drop-shadow-[0_0_2px_rgba(230,185,60,0.8)]" />
+                    <motion.circle 
+                      cx={0} cy={0}
+                      animate={{ r: [0.7, 2.5], opacity: [0.8, 0] }}
+                      transition={{ duration: 2 + (i % 3), repeat: Infinity, ease: "easeOut", delay: i * 0.2 }}
+                      fill="#E6B93C" 
+                    />
+                  </motion.g>
+                ))}
+              </svg>
               
               {/* Soft sweeping ambient light instead of harsh scanner lines */}
               <div className="absolute top-0 bottom-0 left-0 w-[300px] bg-gradient-to-r from-transparent via-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[sweep_6s_linear_infinite] pointer-events-none" />
-              
-              {/* Clean, soft pulses */}
-              <div className="absolute top-[35%] left-[25%] flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-white/40 rounded-full" />
-                <div className="absolute w-6 h-6 border border-white/10 rounded-full scale-50 opacity-0 group-hover:animate-ping-slow" />
-              </div>
-              
-              <div className="absolute top-[60%] left-[45%] flex items-center justify-center">
-                <div className="w-1 h-1 bg-white/30 rounded-full" />
-                <div className="absolute w-8 h-8 border border-white/5 rounded-full scale-50 opacity-0 group-hover:animate-ping-slow" style={{ animationDelay: '1s' }} />
-              </div>
-              
-              <div className="absolute top-[40%] left-[75%] flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-yellow-500/60 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.3)]" />
-                <div className="absolute w-10 h-10 border border-yellow-500/20 rounded-full scale-50 opacity-0 group-hover:animate-ping-slow" style={{ animationDelay: '0.5s' }} />
-              </div>
             </div>
           </motion.div>
 

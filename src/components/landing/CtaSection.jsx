@@ -109,7 +109,7 @@ export default function CtaSection() {
         
         <motion.h2 
           {...anim(0)} 
-          className="text-4xl md:text-5xl lg:text-[56px] font-medium tracking-tight mb-6 text-white/90 leading-[1.1]"
+          className="text-4xl md:text-5xl lg:text-[56px] font-medium tracking-tight mb-6 text-text-primary leading-[1.1]"
         >
           Scale your intelligence, <br className="hidden md:block" />
           Monetize your network
@@ -117,7 +117,7 @@ export default function CtaSection() {
         
         <motion.p 
           {...anim(0.1)} 
-          className="text-[16px] text-white/40 mb-10 leading-relaxed max-w-xl"
+          className="text-[16px] text-text-secondary mb-10 leading-relaxed max-w-xl"
         >
           Deploy decentralized AI agents and monetize your social footprint on a single, globally distributed network starting from day one.
         </motion.p>

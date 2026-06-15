@@ -137,13 +137,13 @@ export default function HeroSection() {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col items-center text-center">
         
         {/* Title */}
-        <motion.h1 {...anim(0.1)} className="text-5xl sm:text-6xl md:text-[80px] font-medium tracking-tight text-white leading-[1.05] mb-6 max-w-4xl drop-shadow-sm">
+        <motion.h1 {...anim(0.1)} className="text-5xl sm:text-6xl md:text-[80px] font-medium tracking-tight text-text-primary leading-[1.05] mb-6 max-w-4xl drop-shadow-sm">
           Complete AI <br className="hidden md:block" />
           Infrastructure
         </motion.h1>
 
         {/* Subtitle */}
-        <motion.p {...anim(0.2)} className="text-lg md:text-[20px] text-gray-400 max-w-[680px] mx-auto mb-10 leading-relaxed font-normal">
+        <motion.p {...anim(0.2)} className="text-lg md:text-[20px] text-text-secondary max-w-[680px] mx-auto mb-10 leading-relaxed font-normal">
           More than just an agent. Elyxnet is a comprehensive, decentralized network that transforms your idle social accounts into globally distributed AI compute nodes.
         </motion.p>
 

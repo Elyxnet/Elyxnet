@@ -85,12 +85,12 @@ export default function FAQ() {
             <Crosshair className="hidden lg:block top-0 left-full" />
             <Crosshair className="hidden lg:block top-full left-full" />
 
-            <h2 className="text-4xl md:text-[52px] font-medium tracking-tight text-white/90 leading-[1.1] mb-8">
+            <h2 className="text-4xl md:text-[52px] font-medium tracking-tight text-text-primary leading-[1.1] mb-8">
               Frequently <br />
               asked questions
             </h2>
             
-            <p className="text-[15px] text-white/40 leading-relaxed mb-10 max-w-sm">
+            <p className="text-[15px] text-text-secondary leading-relaxed mb-10 max-w-sm">
               Everything you need to know about deploying on Elyxnet. Can't find an answer? Our core engineering team is one message away.
             </p>
           </div>

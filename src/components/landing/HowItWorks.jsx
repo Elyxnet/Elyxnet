@@ -180,11 +180,11 @@ export default function HowItWorks() {
         
         {/* Header Section */}
         <motion.div {...anim(0)} className="mb-24 max-w-4xl">
-          <h2 className="text-4xl md:text-[56px] font-medium tracking-tight text-white leading-[1.05] mb-8">
+          <h2 className="text-4xl md:text-[56px] font-medium tracking-tight text-text-primary leading-[1.05] mb-8">
             One network that <span className="text-white/80">connects</span>, <br className="hidden md:block" />
             <span className="text-white/80">crawls</span>, and <span className="text-white/80">computes</span> every task
           </h2>
-          <p className="text-white/40 text-lg md:text-[20px] leading-relaxed max-w-2xl font-normal">
+          <p className="text-text-secondary text-lg md:text-[20px] leading-relaxed max-w-2xl font-normal">
             Elyxnet collapses your idle social accounts into a single distributed node built to crawl, route, and earn without the integration tax.
           </p>
         </motion.div>
