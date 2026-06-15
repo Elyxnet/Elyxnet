@@ -129,7 +129,7 @@ export default function CtaSection() {
           {/* Primary Yellow Button */}
           <Link 
             href="/connect" 
-            className="w-full sm:w-auto h-12 px-8 bg-yellow-500 text-black rounded-lg text-[14px] font-semibold flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-[0_0_24px_rgba(234,179,8,0.2)]"
+            className="w-full cta sm:w-auto h-12 px-8 bg-yellow-500 text-black rounded-lg text-[14px] font-semibold flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-[0_0_24px_rgba(234,179,8,0.2)]"
           >
             Get Started
           </Link>
@@ -137,7 +137,7 @@ export default function CtaSection() {
           {/* Secondary Outline Button */}
           <Link 
             href="/network" 
-            className="w-full sm:w-auto h-12 px-8 bg-transparent text-white border border-white/10 rounded-lg text-[14px] font-medium flex items-center justify-center hover:bg-white/[0.04] transition-colors"
+            className="w-full sm:w-auto h-10 px-8 bg-transparent text-white border border-white/10 rounded-lg text-[14px] font-medium flex items-center justify-center hover:bg-white/[0.04] transition-colors"
           >
             View Live Network
           </Link>

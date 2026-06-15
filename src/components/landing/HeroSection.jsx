@@ -148,10 +148,10 @@ export default function HeroSection() {
 
         {/* Buttons */}
         <motion.div {...anim(0.3)} className="flex flex-row items-center gap-4 w-full justify-center">
-          <Link href="/connect" className="h-11 px-6 bg-yellow-400 text-black rounded-md text-[14px] font-bold flex items-center justify-center hover:bg-yellow-300 transition-colors shadow-[0_0_24px_rgba(234,179,8,0.3)]">
+          <Link href="/connect" className="cta scale-110">
             Connect Platforms
           </Link>
-          <Link href="/network" className="h-11 px-6 bg-[#111] text-white border border-white/10 rounded-md text-[14px] font-medium flex items-center justify-center hover:bg-[#1a1a1a] transition-colors hover:border-white/20">
+          <Link href="/network" className="h-10 px-6 bg-[#111] text-white border border-white/10 rounded-md text-[14px] font-medium flex items-center justify-center hover:bg-[#1a1a1a] transition-colors hover:border-white/20">
             View Live Network
           </Link>
         </motion.div>

@@ -79,7 +79,7 @@ export default function Navbar() {
             // Connected State
             <Link 
               href="/dashboard" 
-              className="group h-10 px-5 bg-yellow-500 text-black rounded-lg text-[13px] font-semibold flex items-center justify-center hover:bg-yellow-400 transition-all duration-300 shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:shadow-[0_0_25px_rgba(234,179,8,0.3)] gap-2"
+              className="group cta h-10 px-5 bg-yellow-500 text-black rounded-lg text-[13px] font-semibold flex items-center justify-center hover:bg-yellow-400 transition-all duration-300 shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:shadow-[0_0_25px_rgba(234,179,8,0.3)] gap-2"
             >
               Open Dashboard
               <RiArrowRightLine className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
@@ -89,13 +89,7 @@ export default function Navbar() {
             <>
               <Link 
                 href="/connect" 
-                className="text-[13px] font-medium text-white/50 hover:text-white transition-colors duration-300 hidden sm:block px-2"
-              >
-                Sign In
-              </Link>
-              <Link 
-                href="/connect" 
-                className="h-10 px-6 bg-white text-black rounded-lg text-[13px] font-semibold flex items-center justify-center hover:bg-gray-100 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
+                className="cta h-10 px-6 bg-white text-black rounded-lg text-[13px] font-semibold flex items-center justify-center hover:bg-gray-100 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
               >
                 Connect Wallet
               </Link>
