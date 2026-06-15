@@ -13,6 +13,7 @@ import {
 } from "react-icons/ri";
 import Badge from "@/components/ui/Badge";
 import Toggle from "@/components/ui/Toggle";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: RiDashboardLine },
@@ -41,9 +42,12 @@ export default function Sidebar({ wallet, infraActive, onInfraToggle }) {
       {/* Logo */}
       <div className="px-5 h-14 flex items-center border-b border-border-default">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-yellow-400 font-bold text-[15px] tracking-[-0.01em]">
-            ELYXNET
-          </span>
+          <Image 
+            src="/logo.png"
+            alt="Elyxnet Logo"
+            width={140}
+            height={80}
+          />
         </Link>
       </div>
 
