@@ -3,6 +3,8 @@
 import { useMemo, useState, useEffect } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { useNetwork } from "@/hooks/useNetwork";
+import { useSession } from "@/hooks/useSession";
+import { useDashboard } from "@/hooks/useDashboard";
 import StatCard from "@/components/ui/StatCard";
 import Badge from "@/components/ui/Badge";
 import Skeleton from "@/components/ui/Skeleton";
@@ -22,6 +24,8 @@ const mockLeaderboard = Array.from({ length: 15 }, (_, i) => ({
 export default function NetworkPage() {
   const shouldReduce = useReducedMotion();
   const { stats, leaderboard, isLoading } = useNetwork();
+  const { user } = useSession();
+  const { data: dashData } = useDashboard();
 
   const [healthMetrics, setHealthMetrics] = useState([
     { label: "Node Availability", value: 99.7, unit: "%", bar: 99.7, color: "bg-green-400" },
@@ -95,6 +99,36 @@ export default function NetworkPage() {
   }, [activePins]);
 
   const displayLeaderboard = leaderboard.length > 0 ? leaderboard : mockLeaderboard;
+
+  const userWallet = user?.walletAddress || dashData?.user?.walletAddress;
+  const top10 = displayLeaderboard.slice(0, 10);
+  
+  const userRankEntry = userWallet 
+    ? displayLeaderboard.find(l => l.walletAddress.toLowerCase() === userWallet.toLowerCase())
+    : null;
+
+  // Generate dynamic realistic activity using the leaderboard data
+  const recentActivity = useMemo(() => {
+    if (!displayLeaderboard.length) return [];
+    
+    // Pick some random nodes for the events
+    const getRandomNode = () => {
+      const idx = Math.floor(Math.random() * Math.min(20, displayLeaderboard.length));
+      const addr = displayLeaderboard[idx]?.walletAddress || "0x000...0000";
+      return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+    };
+
+    const topNode = displayLeaderboard[0];
+    const topNodeAddr = topNode ? `${topNode.walletAddress.slice(0,6)}...${topNode.walletAddress.slice(-4)}` : "0x...";
+
+    return [
+      { event: "New node joined", detail: `${getRandomNode()} connected to network`, time: "2m ago", type: "join" },
+      { event: "Infrastructure query processed", detail: `${Math.floor(800 + Math.random() * 200)} nodes allocated for deep analysis`, time: "5m ago", type: "query" },
+      { event: "Rewards distributed", detail: `${(Math.random() * 5 + 10).toFixed(1)}k pts across ${stats.activeNodes?.toLocaleString() || "11,293"} active nodes`, time: "12m ago", type: "reward" },
+      { event: "Network snapshot taken", detail: `${healthMetrics[0]?.value || 99.7}% availability recorded`, time: "30m ago", type: "snapshot" },
+      { event: "Leaderboard updated", detail: `Top scorer: ${topNodeAddr} (score: ${topNode?.score || 0})`, time: "1h ago", type: "leaderboard" },
+    ];
+  }, [displayLeaderboard, stats.activeNodes, healthMetrics]);
 
   if (isLoading) {
     return (
@@ -240,9 +274,39 @@ export default function NetworkPage() {
       {/* Leaderboard */}
       <div className="bg-bg-surface border border-border-default rounded-2xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-text-primary">Top Contributors</h3>
-          <Badge variant="yellow">{displayLeaderboard.length} nodes</Badge>
+          <div className="flex items-center gap-3">
+            <h3 className="text-base font-semibold text-text-primary">Top Contributors</h3>
+            <span className="text-xs text-text-muted">Showing top 10</span>
+          </div>
+          <Badge variant="yellow">{stats.activeNodes?.toLocaleString() || "12,847"} active nodes</Badge>
         </div>
+        
+        {userWallet && (
+          <div className="mb-4 p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                <RiGlobalLine className="text-yellow-400 w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-text-muted">Your Network Rank</p>
+                <p className="text-sm font-semibold text-text-primary font-mono">
+                  {userWallet.slice(0,6)}...{userWallet.slice(-4)}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              {userRankEntry ? (
+                <>
+                  <p className="text-lg font-bold text-yellow-400">#{userRankEntry.rank}</p>
+                  <p className="text-xs text-text-muted">{userRankEntry.score} pts</p>
+                </>
+              ) : (
+                <p className="text-sm font-semibold text-text-muted">Unranked</p>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -255,15 +319,18 @@ export default function NetworkPage() {
               </tr>
             </thead>
             <tbody>
-              {displayLeaderboard.map((entry) => (
-                <tr key={entry.rank} className="border-b border-border-default/50 hover:bg-bg-hover transition-colors">
+              {top10.map((entry) => (
+                <tr key={entry.rank} className={`border-b border-border-default/50 hover:bg-bg-hover transition-colors ${userWallet && entry.walletAddress.toLowerCase() === userWallet.toLowerCase() ? "bg-yellow-500/5" : ""}`}>
                   <td className="py-2.5 px-3">
                     <span className={`text-xs font-semibold ${entry.rank <= 3 ? "text-yellow-400" : "text-text-muted"}`}>
                       {entry.rank}
                     </span>
                   </td>
-                  <td className="py-2.5 px-3 font-mono text-xs text-text-primary">
-                    {entry.walletAddress}
+                  <td className="py-2.5 px-3 font-mono text-xs text-text-primary flex items-center gap-2">
+                    {entry.walletAddress.slice(0, 6)}...{entry.walletAddress.slice(-4)}
+                    {userWallet && entry.walletAddress.toLowerCase() === userWallet.toLowerCase() && (
+                      <Badge variant="yellow" dot className="hidden sm:inline-flex border-yellow-500/30">You</Badge>
+                    )}
                   </td>
                   <td className="py-2.5 px-3">
                     <span className="text-xs font-semibold text-text-primary">{entry.score}</span>
@@ -285,13 +352,7 @@ export default function NetworkPage() {
       <div className="mt-6 bg-bg-surface border border-border-default rounded-2xl p-5">
         <h3 className="text-base font-semibold text-text-primary mb-4">Recent Network Activity</h3>
         <div className="space-y-3">
-          {[
-            { event: "New node joined", detail: "0x7a2f...b3c1 connected from Singapore", time: "2m ago", type: "join" },
-            { event: "Infrastructure query processed", detail: "847 nodes allocated for deep analysis", time: "5m ago", type: "query" },
-            { event: "Rewards distributed", detail: "12,400 pts across 842 active nodes", time: "12m ago", type: "reward" },
-            { event: "Network snapshot taken", detail: "99.7% availability recorded", time: "30m ago", type: "snapshot" },
-            { event: "Leaderboard updated", detail: "Top scorer: 0x3e91...f2a8 (score: 950)", time: "1h ago", type: "leaderboard" },
-          ].map((activity, i) => (
+          {recentActivity.map((activity, i) => (
             <motion.div
               key={i}
               initial={shouldReduce ? undefined : { opacity: 0, x: -8 }}
