@@ -15,6 +15,7 @@ import {
   RiRedditFill,
   RiLinkedinFill
 } from "react-icons/ri";
+import Image from "next/image";
 
 // ==========================================
 // 1. Premium ASCII Wave Canvas Background
@@ -211,7 +212,7 @@ export default function HeroSection() {
                 <div className="flex items-center justify-between p-4 rounded-xl border border-yellow-500/10 bg-yellow-500/5">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full border border-yellow-400/30 bg-yellow-400/10 flex items-center justify-center">
-                      <RiRobot2Line className="text-yellow-400 w-5 h-5" />
+                      <Image src="/tab.png" alt="Elyxnet Logo" width={50} height={50} />
                     </div>
                     <div>
                       <p className="text-[14px] font-medium text-white">Agent Executing...</p>
@@ -230,7 +231,7 @@ export default function HeroSection() {
         </motion.div>
 
         {/* Crosshair Branded Logo Ticker (Real Social Platforms) */}
-        <motion.div {...anim(0.6)} className="mt-24 w-full max-w-[1000px] mx-auto relative group">
+        <motion.div {...anim(0.6)} className="mt-24 bg-gray-500/5 w-full max-w-[1000px] mx-auto relative group">
           {/* Border lines with Crosshairs (+) */}
           <div className="absolute -left-1 top-[-10px] text-yellow-500 text-sm">+</div>
           <div className="absolute -right-1 top-[-10px] text-yellow-500 text-sm">+</div>
