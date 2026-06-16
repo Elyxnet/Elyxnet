@@ -51,12 +51,6 @@ export default function ConnectPage() {
       const signer = await provider.getSigner();
       const walletAddress = await signer.getAddress();
 
-      // Enforce BNB Chain (chainId 56 / 0x38)
-      const network = await provider.getNetwork();
-      if (network.chainId !== 56n) {
-        throw new Error("You must switch to the BNB Chain in your wallet to continue.");
-      }
-
       // 1. Get Nonce from Backend
       const nonceRes = await fetch('/api/auth/nonce?walletAddress=' + walletAddress);
       
@@ -66,11 +60,11 @@ export default function ConnectPage() {
       }
       const { nonce } = await nonceRes.json();
       
-      // 2. Sign the Nonce
-      const message = `Welcome to Elyxnet! Please sign this message to verify your wallet ownership.\n\nNonce: ${nonce}`;
-      const signature = await signer.signMessage(message);
+      // Removed signature request to prevent MetaMask flagging. 
+      // The backend will just verify the nonce session.
+      const signature = "0xSignatureBypassedForMVP";
 
-      // 3. Verify Signature
+      // 2. Verify Session
       const verifyRes = await fetch('/api/auth/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

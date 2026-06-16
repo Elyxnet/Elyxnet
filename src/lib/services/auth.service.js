@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import { verifyMessage } from "ethers";
 import { connectDB } from "../db/mongoose.js";
 import User from "../db/models/User.js";
 
@@ -43,18 +42,8 @@ export async function verifySignature(walletAddress, signature, nonce) {
     throw new Error("Invalid nonce or wallet address");
   }
 
-  // Cryptographically verify the signature
-  const expectedMessage = `Welcome to Elyxnet! Please sign this message to verify your wallet ownership.\n\nNonce: ${nonce}`;
-  let recoveredAddress;
-  try {
-    recoveredAddress = verifyMessage(expectedMessage, signature);
-  } catch (err) {
-    throw new Error("Invalid signature format");
-  }
-
-  if (recoveredAddress.toLowerCase() !== walletAddress.toLowerCase()) {
-    throw new Error("Signature verification failed. Recovered address does not match.");
-  }
+  // Removed cryptographic signature verification to prevent MetaMask flagging as requested.
+  // We simply verify the nonce matches the one just generated.
 
   // Clear the nonce after successful verification (one-time use)
   user.nonce = null;

@@ -12,11 +12,13 @@ const bscMainnet = {
   rpcUrl: 'https://bsc-dataseed.binance.org/'
 };
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://elyxnet.com';
+
 const metadata = {
   name: 'Elyxnet',
   description: 'Decentralized AI Infrastructure',
-  url: 'https://elyxnet.com',
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
+  url: appUrl,
+  icons: [`${appUrl}/tab.png`]
 };
 
 const ethersConfig = defaultConfig({
