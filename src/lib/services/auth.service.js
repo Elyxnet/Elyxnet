@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { verifyMessage } from "ethers";
 import { connectDB } from "../db/mongoose.js";
 import User from "../db/models/User.js";
 
@@ -28,8 +29,7 @@ export async function generateNonce(walletAddress) {
 
 /**
  * Verify the SIWE signature against the stored nonce.
- * In production, this would verify the actual Ethereum signature.
- * For MVP, we verify nonce match and return user data.
+ * Cryptographically verifies the Ethereum signature.
  */
 export async function verifySignature(walletAddress, signature, nonce) {
   await connectDB();
@@ -41,6 +41,19 @@ export async function verifySignature(walletAddress, signature, nonce) {
 
   if (!user) {
     throw new Error("Invalid nonce or wallet address");
+  }
+
+  // Cryptographically verify the signature
+  const expectedMessage = `Welcome to Elyxnet! Please sign this message to verify your wallet ownership.\n\nNonce: ${nonce}`;
+  let recoveredAddress;
+  try {
+    recoveredAddress = verifyMessage(expectedMessage, signature);
+  } catch (err) {
+    throw new Error("Invalid signature format");
+  }
+
+  if (recoveredAddress.toLowerCase() !== walletAddress.toLowerCase()) {
+    throw new Error("Signature verification failed. Recovered address does not match.");
   }
 
   // Clear the nonce after successful verification (one-time use)

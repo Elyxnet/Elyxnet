@@ -33,6 +33,8 @@ export const metadata = {
   },
 };
 
+import { Web3ModalProvider } from "@/context/Web3Modal";
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -40,7 +42,9 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen bg-bg-base text-text-primary font-sans antialiased">
-        {children}
+        <Web3ModalProvider>
+          {children}
+        </Web3ModalProvider>
       </body>
     </html>
   );

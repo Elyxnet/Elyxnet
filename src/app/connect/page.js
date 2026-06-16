@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { RiWallet3Line, RiFlashlightLine, RiGlobalLine } from "react-icons/ri";
 import Button from "@/components/ui/Button";
+import { useWeb3Modal, useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react';
 
 const stats = [
   { value: "12,847", label: "nodes" },
@@ -26,43 +27,80 @@ export default function ConnectPage() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleConnect = async () => {
+  // Web3Modal Hooks
+  const { open } = useWeb3Modal();
+  const { isConnected } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
+
+  useEffect(() => {
+    // When WalletConnect connects successfully, trigger our signing flow automatically
+    if (isConnected && walletProvider && !isConnecting) {
+      handleVerification();
+    }
+  }, [isConnected, walletProvider]);
+
+  const handleVerification = async () => {
     try {
       setIsConnecting(true);
       setError(null);
+
+      // Dynamic import to avoid SSR issues
+      const { BrowserProvider } = await import("ethers");
+      const provider = new BrowserProvider(walletProvider);
+
+      const signer = await provider.getSigner();
+      const walletAddress = await signer.getAddress();
+
+      // Enforce BNB Chain (chainId 56 / 0x38)
+      const network = await provider.getNetwork();
+      if (network.chainId !== 56n) {
+        throw new Error("You must switch to the BNB Chain in your wallet to continue.");
+      }
+
+      // 1. Get Nonce from Backend
+      const nonceRes = await fetch('/api/auth/nonce?walletAddress=' + walletAddress);
       
-      // Mock wallet address for MVP
-      const walletAddress = "0x" + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-      
-      // 1. Get Nonce (creates user in DB)
-      const nonceRes = await fetch('/api/auth/nonce', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ walletAddress })
-      });
-      
-      if (!nonceRes.ok) throw new Error("Failed to get nonce");
+      if (!nonceRes.ok) {
+        const errorData = await nonceRes.json();
+        throw new Error(errorData.error || "Failed to get nonce");
+      }
       const { nonce } = await nonceRes.json();
       
-      // 2. Verify Signature (mock verification, sets HTTP-only cookie)
+      // 2. Sign the Nonce
+      const message = `Welcome to Elyxnet! Please sign this message to verify your wallet ownership.\n\nNonce: ${nonce}`;
+      const signature = await signer.signMessage(message);
+
+      // 3. Verify Signature
       const verifyRes = await fetch('/api/auth/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           walletAddress, 
-          signature: "0xMockSignatureForMVP", 
+          signature, 
           nonce 
         })
       });
       
-      if (!verifyRes.ok) throw new Error("Authentication failed");
+      if (!verifyRes.ok) {
+        const errorData = await verifyRes.json();
+        throw new Error(errorData.error || "Authentication failed");
+      }
       
       // Success - redirect to dashboard
       window.location.href = "/dashboard";
     } catch (err) {
-      console.error(err);
-      setError(err.message || "Failed to connect wallet");
+      console.error("Verification Error:", err);
+      // If the user rejects the signature, we disconnect so they can try again cleanly
+      setError(err.message || "Failed to verify wallet");
       setIsConnecting(false);
+    }
+  };
+
+  const handleConnectClick = () => {
+    if (isConnected) {
+      handleVerification();
+    } else {
+      open();
     }
   };
 
@@ -147,7 +185,7 @@ export default function ConnectPage() {
           <Button
             variant="primary"
             className="w-full h-11 text-[15px]"
-            onClick={handleConnect}
+            onClick={handleConnectClick}
             disabled={isConnecting}
           >
             {isConnecting ? (
