@@ -8,7 +8,7 @@ import User from "../db/models/User.js";
  */
 export async function generateNonce(walletAddress) {
   await connectDB();
-
+ 
   const nonce = crypto.randomBytes(32).toString("hex");
 
   const user = await User.findOneAndUpdate(
