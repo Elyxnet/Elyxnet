@@ -3,7 +3,7 @@ import SocialAccount from "../db/models/SocialAccount.js";
 
 /**
  * List connected social accounts for a user.
- */
+ */  
 export async function listSocials(walletAddress) {
   await connectDB();
 
