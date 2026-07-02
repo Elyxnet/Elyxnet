@@ -71,7 +71,7 @@ export default function Footer() {
             <h4 className="text-[13px] font-semibold text-white/90 mb-6 tracking-wide">Links</h4>
             <ul className="space-y-4">
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="text-[14px] text-white/40 hover:text-yellow-400 hover:translate-x-1 inline-block transition-all duration-300">
+                <a href="https://x.com/ElyxnetAI" target="_blank" rel="noopener noreferrer" className="text-[14px] text-white/40 hover:text-yellow-400 hover:translate-x-1 inline-block transition-all duration-300">
                   X (Twitter)
                 </a>
               </li>
